@@ -1,4 +1,4 @@
-package net.industrial.src;
+package net.industrial.grassland;
 
 import org.lwjgl.LWJGLException;
 

@@ -1,8 +1,7 @@
-package net.industrial.src;
+package net.industrial.grassland;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.industrial.src.World;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;

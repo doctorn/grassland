@@ -1,18 +1,8 @@
-package net.industrial.src.GameObject;
+package net.industrial.grassland;
 
 import org.lwjgl.LWJGLException;
 
-import net.industrial.src.Game;
-import net.industrial.src.World;
-
 public abstract class GameObject {
-    private World world; 
-    private float x, y, z;
-
-    public GameObject(World world) {
-        this.world = world;    
-    }
-
     public void update(Game game, int delta) throws LWJGLException {
         //TODO
         updateImpl(game, delta);
