@@ -2,13 +2,14 @@ package net.industrial.grassland;
 
 import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.util.vector.Vector3f;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Light {
     private boolean tracking = false;
     private GameObject tracked;
     private int lightNumber;
-    private float x, y, z;
+    private Vector3f position = new Vector3f();
 
     public static final int LIGHT_0 = GL_LIGHT0,
             LIGHT_1 = GL_LIGHT1,
@@ -23,7 +24,7 @@ public class Light {
             float r, float g, float b,
             int lightNumber) {
         this.lightNumber = lightNumber; 
-        setPosition(x, y, z); 
+        setPosition(new Vector3f(x, y, z)); 
         
         FloatBuffer colour = BufferUtils.createFloatBuffer(4);
         colour.put(r).put(g).put(g).put(1f);
@@ -63,25 +64,39 @@ public class Light {
         glEnable(lightNumber);
     }
 
-    public void setPosition(float x, float y, float z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        
-        FloatBuffer position = BufferUtils.createFloatBuffer(4);
-        position.put(x).put(y).put(z).put(1f);
-        position.flip();
-        glLight(lightNumber, GL_POSITION, position);
+    public void setPosition(Vector3f position) {
+        this.position = position; 
+     
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
+        buffer.put(position.x).put(position.y).put(position.z).put(1f);
+        buffer.flip();
+        glLight(lightNumber, GL_POSITION, buffer);
     }
 
     public void update(Game game, int delta) {
         if (tracking && !tracked.willDie()) {
-            setPosition(tracked.getX(), tracked.getY(), tracked.getZ());
+            setPosition(tracked.getPosition());
         }
     }
 
     public void renderDebug(Game game, int delta) {
-        RenderUtils.drawCuboid(x, y, z, 0.05f, 0.05f, 0.05f);
+        RenderUtils.drawCuboid(position, 0.05f, 0.05f, 0.05f);
+    }
+
+    public Vector3f getPosition() {
+        return new Vector3f(position);
+    }
+
+    public float getX() {
+        return position.x;
+    }
+
+    public float getY() {
+        return position.y;
+    }
+
+    public float getZ() {
+        return position.z;
     }
 
     public int getNumber() {
