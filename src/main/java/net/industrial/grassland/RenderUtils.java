@@ -22,7 +22,7 @@ public class RenderUtils {
         glEnable(GL_CULL_FACE); 
         if (lighting) glEnable(GL_LIGHTING);
     }
-    
+
 
     public static List<Vector3f> createQuad(Vector3f p, Vector3f n, Vector3f a, float l, float w) {
         List<Vector3f> vertices = new ArrayList<>();
@@ -69,10 +69,8 @@ public class RenderUtils {
         glEnd();
     }
 
-    public static void fillFlatPlane(Vector3f p, Vector3f n, Vector3f a, float l, float w) {
+    public static void fillFlatPlane(Vector3f p, Vector3f n, Vector3f a, float l, float w, int c) {
         glBegin(GL_QUADS);
-
-        int c = 10;
 
         for (int i = 0; i < c; i++) {
             for (int j = 0; j < c; j++) {
