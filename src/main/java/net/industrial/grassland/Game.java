@@ -32,7 +32,6 @@ public abstract class Game {
         glEnable(GL_CULL_FACE); 
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
-        glShadeModel(GL_SMOOTH);
      
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -42,7 +41,7 @@ public abstract class Game {
      
         states = new ArrayList<GameState>();
         initStates();
-
+     
         for (GameState state : states) state.init(this);
         loop(); 
     }
@@ -58,9 +57,13 @@ public abstract class Game {
             
             int remainder = delta % 10;
             int step = delta / 10;
-            for (int i = 0; i < step; i++) currentState.update(this, 10); 
-            if (remainder != 0) currentState.update(this, remainder); 
-            currentState.render(this, 10);
+            for (int i = 0; i < step; i++) currentState.updateDefault(this, 10); 
+            if (remainder != 0) currentState.updateDefault(this, remainder); 
+           
+            glPushMatrix(); 
+            glScalef(1.0f, 1.0f, 1.0f);
+            currentState.renderDefault(this, 10);
+            glPopMatrix();
             
             Display.update();
         } while (!Display.isCloseRequested());
