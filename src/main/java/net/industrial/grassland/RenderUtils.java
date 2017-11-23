@@ -1,22 +1,27 @@
 package net.industrial.grassland;
 
+<<<<<<< HEAD
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
 
+=======
+import net.industrial.grassland.Game;
+import org.lwjgl.util.vector.Vector3f;
+>>>>>>> upstream/master
 import static org.lwjgl.opengl.GL11.*;
 
 public class RenderUtils {
 
-    public static void drawCuboid(float x, float y, float z, 
+    public static void drawCuboid(Vector3f position, 
             float dX, float dY, float dZ) {
         boolean lighting = glIsEnabled(GL_LIGHTING); 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDisable(GL_CULL_FACE);
         
         if (lighting) glDisable(GL_LIGHTING);
-        fillCuboid(x, y, z, dX, dY, dZ);
+        fillCuboid(position, dX, dY, dZ);
         
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glEnable(GL_CULL_FACE); 
@@ -91,14 +96,14 @@ public class RenderUtils {
         glEnd();
     }
 
-    public static void fillCuboid(float x, float y, float z,
+    public static void fillCuboid(Vector3f position,
             float dX, float dY, float dZ) {
-        float sX = x - dX / 2;
-        float sY = y - dY / 2;
-        float sZ = z + dZ / 2;
-        float mX = x + dX / 2;
-        float mY = y + dY / 2;
-        float mZ = z - dZ / 2;
+        float sX = position.x - dX / 2;
+        float sY = position.y - dY / 2;
+        float sZ = position.z + dZ / 2;
+        float mX = position.x + dX / 2;
+        float mY = position.y + dY / 2;
+        float mZ = position.z - dZ / 2;
      
         glBegin(GL_QUADS);
         
@@ -139,5 +144,25 @@ public class RenderUtils {
         glVertex3f(sX, mY, sZ);
         
         glEnd();
+    }
+
+    public static void enterOrtho(Game game) {
+        glPushAttrib(GL_DEPTH_BUFFER_BIT | GL_ENABLE_BIT);
+        glPushMatrix();
+        glLoadIdentity();
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+     
+        glLoadIdentity();
+        glOrtho(0, game.getWidth(), game.getHeight(), 0, -1, 1);
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_LIGHTING);
+    } 
+
+    public void leaveOrtho() {
+        glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);
+        glPopMatrix();
+        glPopAttrib();
     }
 }

@@ -2,6 +2,7 @@ package net.industrial.grassland;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.industrial.grassland.GrasslandException;
 import org.lwjgl.LWJGLException;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -17,7 +18,7 @@ public abstract class GameState {
         setLighting(false);
     }
 
-    public abstract void init(Game game) throws LWJGLException;
+    public abstract void init(Game game) throws GrasslandException;
    
     public void updateDefault(Game game, int delta) 
             throws LWJGLException {
@@ -26,7 +27,7 @@ public abstract class GameState {
         update(game, delta);
     }
     
-    public abstract void update(Game game, int delta) throws LWJGLException;
+    public abstract void update(Game game, int delta) throws GrasslandException;
     
     public void renderDefault(Game game, int delta) 
             throws LWJGLException {
@@ -38,7 +39,7 @@ public abstract class GameState {
         render(game, delta);
     }
 
-    public abstract void render(Game game, int delta) throws LWJGLException;
+    public abstract void render(Game game, int delta) throws GrasslandException;
     public abstract int getId();
     
     public void toggleDebug() {
@@ -77,7 +78,7 @@ public abstract class GameState {
     public void toggleLighting() {
         if (!lightingEnabled) {
             glEnable(GL_LIGHTING);
-            glShadeModel(GL_FLAT);
+            glShadeModel(GL_SMOOTH);
         } else {
             glDisable(GL_LIGHTING);
         }

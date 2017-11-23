@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public abstract class GameObject {
     private boolean willDie = false;
-    private float x, y, z;
+    private Vector3f position = new Vector3f();
 
     public void update(Game game, int delta) throws LWJGLException {
         //TODO
@@ -18,21 +18,23 @@ public abstract class GameObject {
     public abstract void renderDebug(Game game, int delta) throws LWJGLException;
     
     public float getX() {
-        return x;
+        return position.x;
     }
     
     public float getY() {
-        return y;
+        return position.y;
     }
 
     public float getZ() {
-        return z;
+        return position.z;
+    }
+    
+    public Vector3f getPosition() {
+        return position;
     }
 
-    public void setPosition(float x, float y, float z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public void setPosition(Vector3f position) {
+        this.position = position;
     }
 
     public void kill() {

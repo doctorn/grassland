@@ -1,25 +1,28 @@
 package net.industrial.grassland;
 
+import org.lwjgl.util.vector.Vector3f;
 import static org.lwjgl.util.glu.GLU.*;
 
 public abstract class Camera {
-    private float x = 0f, y = 0f, z = 0f;
+    private Vector3f position = new Vector3f();
     private float pitch = 0f, yaw = 0f;
     
     public void look() {
-        gluLookAt(x, y, z,
-            x - (float) Math.sin(pitch) * (float) Math.sin(yaw), 
-            y + (float) Math.cos(pitch), 
-            z - (float) Math.sin(pitch) * (float) Math.cos(yaw),  
+        gluLookAt(position.x, position.y, position.z,
+            position.x - (float) Math.sin(pitch) * (float) Math.sin(yaw), 
+            position.y + (float) Math.cos(pitch), 
+            position.z - (float) Math.sin(pitch) * (float) Math.cos(yaw),  
             0f, 1f, 0f);
     }
     
     public abstract void update(Game game, int delta);
    
+    public void setPosition(Vector3f position) {
+        this.position = position; 
+    }
+
     public void setPosition(float x, float y, float z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.position = new Vector3f(x, y, z);
     }
 
     public void setAngle(float yaw, float pitch) {
@@ -34,19 +37,23 @@ public abstract class Camera {
     }
 
     public void renderDebug(Game game, int delta) {
-        RenderUtils.drawCuboid(x, y, z, 0.05f, 0.05f, 0.05f);
+        RenderUtils.drawCuboid(position, 0.05f, 0.05f, 0.05f);
     }
 
     public float getX() {
-        return x;
+        return position.x;
     }
     
     public float getY() {
-        return y;
+        return position.y;
     }
 
     public float getZ() {
-        return z;
+        return position.z;
+    }
+
+    public Vector3f getPosition() {
+        return new Vector3f(position);
     }
 
     public float getPitch() {
