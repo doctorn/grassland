@@ -1,15 +1,12 @@
 package net.industrial.grassland;
 
-<<<<<<< HEAD
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
 
-=======
 import net.industrial.grassland.Game;
 import org.lwjgl.util.vector.Vector3f;
->>>>>>> upstream/master
 import static org.lwjgl.opengl.GL11.*;
 
 public class RenderUtils {
