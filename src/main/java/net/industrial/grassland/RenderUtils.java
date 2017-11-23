@@ -28,68 +28,66 @@ public class RenderUtils {
 
     public static List<Vector3f> createQuad(Vector3f p, Vector3f n, Vector3f a, float l, float w) {
         List<Vector3f> vertices = new ArrayList<>();
-
+     
         Vector3f L = (Vector3f) a.normalise();
         Vector3f N = (Vector3f) n.normalise();
-        Vector3f W = (Vector3f) Vector3f.cross(L,N,null).normalise();
-
+        Vector3f W = (Vector3f) Vector3f.cross(L, N, null).normalise();
+     
         Vector3f A = new Vector3f(
-                p.x - (l/2f) * L.x - (w/2f) * W.x,
-                p.y - (l/2f) * L.y - (w/2f) * W.y,
-                p.z - (l/2f) * L.z - (w/2f) * W.z);
+                p.x - (l / 2f) * L.x - (w / 2f) * W.x,
+                p.y - (l / 2f) * L.y - (w / 2f) * W.y,
+                p.z - (l / 2f) * L.z - (w / 2f) * W.z);
         vertices.add(A);
-
+     
         Vector3f B = new Vector3f(
-                p.x - (l/2f) * L.x + (w/2f) * W.x,
-                p.y - (l/2f) * L.y + (w/2f) * W.y,
-                p.z - (l/2f) * L.z + (w/2f) * W.z);
+                p.x - (l / 2f) * L.x + (w / 2f) * W.x,
+                p.y - (l / 2f) * L.y + (w / 2f) * W.y,
+                p.z - (l / 2f) * L.z + (w / 2f) * W.z);
         vertices.add(B);
-
+     
         Vector3f C = new Vector3f(
-                p.x + (l/2f) * L.x + (w/2f) * W.x,
-                p.y + (l/2f) * L.y + (w/2f) * W.y,
-                p.z + (l/2f) * L.z + (w/2f) * W.z);
-        vertices.add(C);
-
+                p.x + (l / 2f) * L.x + (w / 2f) * W.x,
+                p.y + (l / 2f) * L.y + (w / 2f) * W.y,
+                p.z + (l / 2f) * L.z + (w / 2f) * W.z);
+        vertices.add(C) ;
+     
         Vector3f D = new Vector3f(
-                p.x + (l/2f) * L.x - (w/2f) * W.x,
-                p.y + (l/2f) * L.y - (w/2f) * W.y,
-                p.z + (l/2f) * L.z - (w/2f) * W.z);
+                p.x + (l / 2f) * L.x - (w / 2f) * W.x,
+                p.y + (l / 2f) * L.y - (w / 2f) * W.y,
+                p.z + (l / 2f) * L.z - (w / 2f) * W.z);
         vertices.add(D);
-
+     
         return vertices;
     }
 
     public static  void fillQuad(Vector3f p, Vector3f n, Vector3f a, float l, float w) {
         glBegin(GL_QUADS);
-
-        glNormal3f(n.x,n.y,n.z);
+     
+        glNormal3f(n.x, n.y, n.z);
         List<Vector3f> vertices = createQuad(p, n, a, l, w);
         for(Vector3f v : vertices)
-            glVertex3f(v.x,v.y,v.z);
-
+            glVertex3f(v.x, v.y, v.z);
+        
         glEnd();
     }
 
     public static void fillFlatPlane(Vector3f p, Vector3f n, Vector3f a, float l, float w, int c) {
         glBegin(GL_QUADS);
-
+     
         for (int i = 0; i < c; i++) {
             for (int j = 0; j < c; j++) {
                 glNormal3f(n.x,n.y,n.z);
                 Vector3f L = (Vector3f) a.normalise();
-                Vector3f W = (Vector3f) Vector3f.cross(L,(Vector3f)n.normalise(),null).normalise();
+                Vector3f W = (Vector3f) Vector3f.cross(L, (Vector3f) n.normalise(), null).normalise();
                 Vector3f pos = new Vector3f(
-                        p.x + (i - (c-1)/2f) * l/c * L.x + (j - (c-1)/2f) * w/c * W.x,
-                        p.y + (i - (c-1)/2f) * l/c * L.y + (j - (c-1)/2f) * w/c * W.y,
-                        p.z + (i - (c-1)/2f) * l/c * L.z + (j - (c-1)/2f) * w/c * W.z );
-                List<Vector3f> vertices = createQuad(pos, n, a, l/c, w/c);
-                for(Vector3f v : vertices)
-                    glVertex3f(v.x,v.y,v.z);
+                        p.x + (i - (c - 1) / 2f) * l / c * L.x + (j - (c - 1) / 2f) * w / c * W.x,
+                        p.y + (i - (c - 1) / 2f) * l / c * L.y + (j - (c - 1) / 2f) * w / c * W.y,
+                        p.z + (i - (c - 1) / 2f) * l / c * L.z + (j - (c - 1) / 2f) * w / c * W.z );
+                List<Vector3f> vertices = createQuad(pos, n, a, l / c, w / c);
+                for(Vector3f v : vertices) glVertex3f(v.x, v.y, v.z);
             }
         }
-
-
+     
         glEnd();
     }
 
