@@ -119,7 +119,7 @@ public class RenderUtils {
         glDisable(GL_LIGHTING);
     } 
 
-    public void leaveOrtho() {
+    public static void leaveOrtho() {
         glPopMatrix();
         glMatrixMode(GL_MODELVIEW);
         glPopMatrix();

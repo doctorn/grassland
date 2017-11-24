@@ -33,7 +33,7 @@ public abstract class GameState {
     
     public void renderDefault(Game game, int delta) 
             throws LWJGLException {
-        active.look();
+        if (active != null) active.look();
         if (debug) {
             for (Light light : lights) light.renderDebug(game, delta);
             for (Camera camera : cameras) camera.renderDebug(game, delta); 
@@ -62,6 +62,10 @@ public abstract class GameState {
 
     public void activateCamera(Camera camera) {
         active = camera;
+    }
+
+    public Camera getCamera() {
+        return active;
     }
 
     public void setLight(int lightNumber, Light light) {

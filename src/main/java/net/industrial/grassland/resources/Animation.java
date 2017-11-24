@@ -9,13 +9,15 @@ public class Animation {
     private int stoppingAt;
 
     private int time, currentTime = 0;
-    private int x = 0, y = 0;
+    private int x, y;
     private int currentFrame = 0;
 
     public Animation(SpriteSheet sheet, int startX, int startY, int endX, int endY, boolean looping, int frameRate) {
         this.sheet = sheet;
         this.startX = startX;
         this.startY = startY;
+        this.x = startX;
+        this.y = startY;
         this.endX = endX;
         this.endY = endY;
         this.looping = looping;

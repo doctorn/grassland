@@ -38,8 +38,7 @@ public abstract class Game {
             glDepthFunc(GL_LEQUAL);
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glEnable(GL_COLOR_MATERIAL);
-
+         
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
             gluPerspective(45.0f, 
@@ -93,6 +92,10 @@ public abstract class Game {
         for (GameState state : states) {
             if (state.getId() == newState) currentState = state;
         }
+    }
+
+    public void setBackgroundColour(float r, float g, float b) {
+        glClearColor(r, g, b, 1f);    
     }
 
     public void addState(GameState state) {
