@@ -1,5 +1,7 @@
-package net.industrial.grassland;
+package net.industrial.grassland.scene;
 
+import net.industrial.grassland.Game;
+import net.industrial.grassland.RenderUtils;
 import org.lwjgl.util.vector.Vector3f;
 import static org.lwjgl.util.glu.GLU.*;
 

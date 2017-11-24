@@ -1,6 +1,9 @@
-package net.industrial.grassland;
+package net.industrial.grassland.scene;
 
 import java.nio.FloatBuffer;
+import net.industrial.grassland.Game;
+import net.industrial.grassland.GameObject;
+import net.industrial.grassland.RenderUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector3f;
 import static org.lwjgl.opengl.GL11.*;

@@ -3,6 +3,8 @@ package net.industrial.grassland;
 import java.util.ArrayList;
 import java.util.List;
 import net.industrial.grassland.GrasslandException;
+import net.industrial.grassland.scene.Camera;
+import net.industrial.grassland.scene.Light;
 import org.lwjgl.LWJGLException;
 import static org.lwjgl.opengl.GL11.*;
 
