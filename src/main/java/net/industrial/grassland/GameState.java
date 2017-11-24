@@ -41,7 +41,11 @@ public abstract class GameState {
 
     public abstract void render(Game game, int delta) throws GrasslandException;
     public abstract int getId();
-    
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
     public void toggleDebug() {
         debug = !debug;
     }
@@ -59,9 +63,15 @@ public abstract class GameState {
     }
 
     public void setLight(int lightNumber, Light light) {
+        boolean found = false; 
         for (int i = 0; i < lights.size(); i++) {
-            if (lights.get(i).getNumber() == lightNumber) lights.set(i, light);
+            if (lights.get(i).getNumber() == lightNumber) {
+                lights.set(i, light);
+                found = true;
+            }
         }
+        
+        if (found) addLight(light);
     }
     
     public void setLighting(boolean lighting) {

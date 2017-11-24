@@ -30,11 +30,7 @@ public class Light {
         colour.put(r).put(g).put(g).put(1f);
         colour.flip();
         glLight(lightNumber, GL_DIFFUSE, colour);
-
-        FloatBuffer attenuation = BufferUtils.createFloatBuffer(4);
-        attenuation.put(1.0f).put(0).put(0).put(0).flip();
-        glLight(lightNumber, GL_QUADRATIC_ATTENUATION, attenuation);
-        
+        setAttenuation(1.0f);
         glEnable(lightNumber);
     }
     
@@ -49,10 +45,7 @@ public class Light {
         colour.put(r).put(g).put(g).put(1f);
         colour.flip();
         glLight(lightNumber, GL_DIFFUSE, colour);
-        FloatBuffer attenuation = BufferUtils.createFloatBuffer(4);
-        attenuation.put(1.0f).put(0).put(0).put(0).flip();
-        glLight(lightNumber, GL_QUADRATIC_ATTENUATION, attenuation);
-     
+        setAttenuation(1.0f); 
         glEnable(lightNumber);
     }
 
@@ -71,15 +64,6 @@ public class Light {
         glEnable(lightNumber);
     }
 
-    public void setPosition(Vector3f position) {
-        this.position = position; 
-     
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
-        buffer.put(position.x).put(position.y).put(position.z).put(1f);
-        buffer.flip();
-        glLight(lightNumber, GL_POSITION, buffer);
-    }
-
     public void update(Game game, int delta) {
         if (tracking && !tracked.willDie()) {
             setPosition(tracked.getPosition());
@@ -89,8 +73,23 @@ public class Light {
     public void renderDebug(Game game, int delta) {
         RenderUtils.drawCuboid(position, 0.05f, 0.05f, 0.05f);
     }
+    
+    public void setAttenuation(float attenuation) {
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
+        buffer.put(attenuation).put(0).put(0).put(0).flip();
+        glLight(lightNumber, GL_QUADRATIC_ATTENUATION, buffer);
+    }
 
-    public Vector3f getPosition() {
+    public void setPosition(Vector3f position) {
+        this.position = position; 
+     
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
+        buffer.put(position.x).put(position.y).put(position.z).put(1f);
+        buffer.flip();
+        glLight(lightNumber, GL_POSITION, buffer);
+    }
+
+        public Vector3f getPosition() {
         return new Vector3f(position);
     }
 

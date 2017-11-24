@@ -8,13 +8,34 @@ public abstract class Camera {
     private float pitch = 0f, yaw = 0f;
     
     public void look() {
+        Vector3f l = lookVector();
         gluLookAt(position.x, position.y, position.z,
-            position.x - (float) Math.sin(pitch) * (float) Math.sin(yaw), 
-            position.y + (float) Math.cos(pitch), 
-            position.z - (float) Math.sin(pitch) * (float) Math.cos(yaw),  
+            position.x - l.x, 
+            position.y - l.y, 
+            position.z - l.z,  
             0f, 1f, 0f);
     }
+
+    public Vector3f lookVector() {
+        return (Vector3f) (new Vector3f((float) Math.sin(pitch) * (float) Math.sin(yaw),
+                - (float) Math.cos(pitch),
+                (float) Math.sin(pitch) * (float) Math.cos(yaw))).normalise();
+    }
+
+    public Vector3f flatLookVector() {
+        return (Vector3f) (new Vector3f((float) Math.sin(pitch) * (float) Math.sin(yaw),
+                0f,
+                (float) Math.sin(pitch) * (float) Math.cos(yaw))).normalise();
+    }
     
+    public Vector3f axisVector() {
+        return Vector3f.cross(new Vector3f(0f, 1f, 0f), lookVector(), null);
+    }
+
+    public Vector3f flatAxisVector() {
+        return Vector3f.cross(new Vector3f(0f, 1f, 0f), flatLookVector(), null);
+    }
+
     public abstract void update(Game game, int delta);
    
     public void setPosition(Vector3f position) {
