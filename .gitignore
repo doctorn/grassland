@@ -1,4 +1,5 @@
 target/
+res/
 src/main/java/net/industrial/src/*
 src/main/test/net/industrial/src/*
 build.sh

@@ -30,6 +30,10 @@ public class Light {
         colour.put(r).put(g).put(g).put(1f);
         colour.flip();
         glLight(lightNumber, GL_DIFFUSE, colour);
+
+        FloatBuffer attenuation = BufferUtils.createFloatBuffer(4);
+        attenuation.put(1.0f).put(0).put(0).put(0).flip();
+        glLight(lightNumber, GL_QUADRATIC_ATTENUATION, attenuation);
         
         glEnable(lightNumber);
     }
@@ -45,6 +49,9 @@ public class Light {
         colour.put(r).put(g).put(g).put(1f);
         colour.flip();
         glLight(lightNumber, GL_DIFFUSE, colour);
+        FloatBuffer attenuation = BufferUtils.createFloatBuffer(4);
+        attenuation.put(1.0f).put(0).put(0).put(0).flip();
+        glLight(lightNumber, GL_QUADRATIC_ATTENUATION, attenuation);
      
         glEnable(lightNumber);
     }
