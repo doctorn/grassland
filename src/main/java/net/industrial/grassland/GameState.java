@@ -1,8 +1,10 @@
 package net.industrial.grassland;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import net.industrial.grassland.GrasslandException;
+import net.industrial.grassland.graphics.Graphics;
 import net.industrial.grassland.scene.Camera;
 import net.industrial.grassland.scene.Light;
 import org.lwjgl.LWJGLException;
@@ -20,28 +22,33 @@ public abstract class GameState {
         setLighting(false);
     }
 
-    public abstract void init(Game game) throws GrasslandException;
+    public abstract void init(Game game) 
+            throws GrasslandException;
    
     public void updateDefault(Game game, int delta) 
             throws LWJGLException {
         for (Camera camera : cameras) camera.update(game, delta); 
         for (Light light : lights) light.update(game, delta);
+        Collections.sort(lights); 
         update(game, delta);
     }
     
-    public abstract void update(Game game, int delta) throws GrasslandException;
+    public abstract void update(Game game, int delta) 
+            throws GrasslandException;
     
-    public void renderDefault(Game game, int delta) 
+    public void renderDefault(Game game, Graphics graphics) 
             throws LWJGLException {
-        if (active != null) active.look();
+        if (lightingEnabled) glEnable(GL_LIGHTING);
         if (debug) {
-            for (Light light : lights) light.renderDebug(game, delta);
-            for (Camera camera : cameras) camera.renderDebug(game, delta); 
+            for (Light light : lights) light.renderDebug(game, graphics);
+            for (Camera camera : cameras) camera.renderDebug(game, graphics); 
         }
-        render(game, delta);
+        render(game, graphics);
     }
 
-    public abstract void render(Game game, int delta) throws GrasslandException;
+    public abstract void render(Game game, Graphics graphics) 
+            throws GrasslandException;
+
     public abstract int getId();
 
     public void setDebug(boolean debug) {
@@ -56,6 +63,10 @@ public abstract class GameState {
         lights.add(light);
     }
 
+    public List<Light> getLights() {
+        return lights;
+    }
+
     public void addCamera(Camera camera) {
         cameras.add(camera);
     }
@@ -66,18 +77,6 @@ public abstract class GameState {
 
     public Camera getCamera() {
         return active;
-    }
-
-    public void setLight(int lightNumber, Light light) {
-        boolean found = false; 
-        for (int i = 0; i < lights.size(); i++) {
-            if (lights.get(i).getNumber() == lightNumber) {
-                lights.set(i, light);
-                found = true;
-            }
-        }
-        
-        if (found) addLight(light);
     }
     
     public void setLighting(boolean lighting) {

@@ -1,7 +1,7 @@
 package net.industrial.grassland.scene;
 
 import net.industrial.grassland.Game;
-import net.industrial.grassland.RenderUtils;
+import net.industrial.grassland.graphics.Graphics;
 import org.lwjgl.util.vector.Vector3f;
 import static org.lwjgl.util.glu.GLU.*;
 
@@ -59,8 +59,8 @@ public abstract class Camera {
         this.yaw = yaw;
     }
 
-    public void renderDebug(Game game, int delta) {
-        RenderUtils.drawCuboid(position, 0.05f, 0.05f, 0.05f);
+    public void renderDebug(Game game, Graphics graphics) {
+        graphics.drawCuboid(position, 0.05f, 0.05f, 0.05f);
     }
 
     public float getX() {

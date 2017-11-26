@@ -5,7 +5,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.util.vector.Vector3f;
 
 import net.industrial.grassland.GrasslandException;
-import net.industrial.grassland.RenderUtils;
+import net.industrial.grassland.graphics.Graphics;
 
 public abstract class GameObject {
     private boolean willDie = false;
@@ -17,12 +17,14 @@ public abstract class GameObject {
         updateImpl(game, delta);
     }
     
-    public abstract void updateImpl(Game game, int delta) throws GrasslandException;
-    public abstract void render(Game game, int delta) throws GrasslandException;
+    public abstract void updateImpl(Game game, int delta) 
+            throws GrasslandException;
+    public abstract void render(Game game, Graphics graphics) 
+            throws GrasslandException;
     
-    public void renderDebug(Game game, int delta) 
+    public void renderDebug(Game game, Graphics graphics) 
             throws GrasslandException {
-        RenderUtils.drawCuboid(position, width, height, depth);
+        graphics.drawCuboid(position, width, height, depth);
     }
     
     public void setSize(float width, float height, float depth) {

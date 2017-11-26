@@ -3,38 +3,29 @@ package net.industrial.grassland.scene;
 import java.nio.FloatBuffer;
 import net.industrial.grassland.Game;
 import net.industrial.grassland.GameObject;
-import net.industrial.grassland.RenderUtils;
+import net.industrial.grassland.graphics.Graphics;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector3f;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Light {
+public class Light implements Comparable<Light> {
     private boolean tracking = false;
+    private float distance;
+    private boolean ambient = false;
+    private FloatBuffer colour, attenuation;
+
     private GameObject tracked;
-    private int lightNumber;
     private Vector3f position = new Vector3f();
 
-    public static final int LIGHT_0 = GL_LIGHT0,
-            LIGHT_1 = GL_LIGHT1,
-            LIGHT_2 = GL_LIGHT2,
-            LIGHT_3 = GL_LIGHT3,
-            LIGHT_4 = GL_LIGHT4,
-            LIGHT_5 = GL_LIGHT5,
-            LIGHT_6 = GL_LIGHT6,
-            LIGHT_7 = GL_LIGHT7;
-   
     public Light(float x, float y, float z,
-            float r, float g, float b,
-            int lightNumber) {
-        this.lightNumber = lightNumber; 
+            float r, float g, float b) {
         setPosition(new Vector3f(x, y, z)); 
         
-        FloatBuffer colour = BufferUtils.createFloatBuffer(4);
+        colour = BufferUtils.createFloatBuffer(4);
         colour.put(r).put(g).put(g).put(1f);
         colour.flip();
-        glLight(lightNumber, GL_DIFFUSE, colour);
+        
         setAttenuation(1.0f);
-        glEnable(lightNumber);
     }
     
     public Light(GameObject tracked,
@@ -42,57 +33,67 @@ public class Light {
             int lightNumber) {
         tracking = true;
         this.tracked = tracked;
-        this.lightNumber = lightNumber; 
         
-        FloatBuffer colour = BufferUtils.createFloatBuffer(4);
+        colour = BufferUtils.createFloatBuffer(4);
         colour.put(r).put(g).put(g).put(1f);
         colour.flip();
-        glLight(lightNumber, GL_DIFFUSE, colour);
+        
         setAttenuation(1.0f); 
-        glEnable(lightNumber);
     }
 
-    public Light(float r, float g, float b, float a,
-            int lightNumber) {
-        FloatBuffer ambient = BufferUtils.createFloatBuffer(4);
-        ambient.put(r).put(g).put(b).put(a);
-        ambient.flip();
-        glLight(lightNumber, GL_AMBIENT, ambient);
-     
-        FloatBuffer diffuse = BufferUtils.createFloatBuffer(4);
-        diffuse.put(0f).put(0f).put(0f).put(0f);
-        diffuse.flip();
-        glLight(lightNumber, GL_DIFFUSE, diffuse);
-        
-        glEnable(lightNumber);
+    public Light(float r, float g, float b, float a) {
+        colour = BufferUtils.createFloatBuffer(4);
+        colour.put(r).put(g).put(b).put(a);
+        colour.flip();
+        ambient = true;
     }
 
     public void update(Game game, int delta) {
+        Camera camera = game.currentState().getCamera(); 
+        if (camera != null && !ambient) {
+            Vector3f d = Vector3f.sub(position, camera.getPosition(), null);
+            distance = Math.abs(Vector3f.dot(d, camera.lookVector()));
+        } else distance = 0;
+     
         if (tracking && !tracked.willDie()) {
             setPosition(tracked.getPosition());
         }
     }
 
-    public void renderDebug(Game game, int delta) {
-        RenderUtils.drawCuboid(position, 0.05f, 0.05f, 0.05f);
-    }
-    
-    public void setAttenuation(float attenuation) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
-        buffer.put(attenuation).put(0).put(0).put(0).flip();
-        glLight(lightNumber, GL_QUADRATIC_ATTENUATION, buffer);
-    }
-
-    public void setPosition(Vector3f position) {
-        this.position = position; 
-     
+    public void render(int lightNumber) {
+        if (!ambient) {
+            glLight(lightNumber, GL_DIFFUSE, colour);
+            glLight(lightNumber, GL_QUADRATIC_ATTENUATION, attenuation);
+        } else {
+            glLight(lightNumber, GL_AMBIENT, colour);
+            FloatBuffer diffuse = BufferUtils.createFloatBuffer(4);
+            diffuse.put(0f).put(0f).put(0f).put(0f);
+            diffuse.flip();
+            glLight(lightNumber, GL_DIFFUSE, diffuse);
+        }
+        
         FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
         buffer.put(position.x).put(position.y).put(position.z).put(1f);
         buffer.flip();
         glLight(lightNumber, GL_POSITION, buffer);
+     
+        glEnable(lightNumber);
     }
 
-        public Vector3f getPosition() {
+    public void renderDebug(Game game, Graphics graphics) {
+        graphics.drawCuboid(position, 0.05f, 0.05f, 0.05f);
+    }
+    
+    public void setAttenuation(float a) {
+        attenuation = BufferUtils.createFloatBuffer(4);
+        attenuation.put(a).put(0).put(0).put(0).flip();
+    }
+
+    public void setPosition(Vector3f position) {
+        this.position = position; 
+    }
+
+    public Vector3f getPosition() {
         return new Vector3f(position);
     }
 
@@ -108,7 +109,10 @@ public class Light {
         return position.z;
     }
 
-    public int getNumber() {
-        return lightNumber;
+    @Override
+    public int compareTo(Light other) {
+        if (distance - other.distance > 0) return 1;
+        else if (distance - other.distance < 0) return -1;
+        else return 0;
     }
 }
