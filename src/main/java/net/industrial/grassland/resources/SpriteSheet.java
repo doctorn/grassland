@@ -20,7 +20,7 @@ public class SpriteSheet {
     public SpriteSheet(String file, int spriteWidth, int spriteHeight) 
             throws GrasslandException {
         this.spriteWidth = spriteWidth;
-        this.spriteHeight = spriteHeight;
+        this.spriteHeight = spriteHeight; 
         ByteBuffer buffer = null;
         
         try {
@@ -62,7 +62,15 @@ public class SpriteSheet {
     }
 
     public Sprite getSprite(int coordX, int coordY) {
-        return new Sprite(this, coordX, coordY, spriteWidth, spriteHeight);
+        return new Sprite(this, coordX, coordY);
+    }
+    
+    public SpriteSheet(SpriteSheet other) {
+        id = other.id;
+        spriteWidth = other.spriteWidth;
+        spriteHeight = other.spriteHeight;
+        width = other.width;
+        height = other.height;
     }
 
     public int getWidth() {
@@ -73,12 +81,29 @@ public class SpriteSheet {
         return height;
     }
 
+    public int getSpriteWidth() {
+        return spriteWidth;
+    }
+
+    public int getSpriteHeight() {
+        return spriteHeight;
+    }
+
     public int getRows() {
         return height / spriteHeight;
     }
 
     public int getColumns() {
         return width / spriteWidth;
+    }
+
+    public SpriteSheet scale(float sf) {
+        SpriteSheet scaled = new SpriteSheet(this);
+        scaled.spriteWidth = Math.round(spriteWidth * sf); 
+        scaled.spriteHeight = Math.round(spriteHeight * sf); 
+        scaled.width = Math.round(width * sf);
+        scaled.height = Math.round(height * sf);
+        return scaled;
     }
 
     public int getID() {

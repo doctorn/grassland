@@ -52,7 +52,7 @@ public class Light implements Comparable<Light> {
         Camera camera = game.currentState().getCamera(); 
         if (camera != null && !ambient) {
             Vector3f d = Vector3f.sub(position, camera.getPosition(), null);
-            distance = Math.abs(Vector3f.dot(d, camera.lookVector()));
+            distance = (Vector3f.sub(d, camera.getPosition(), null)).length();
         } else distance = 0;
      
         if (tracking && !tracked.willDie()) {

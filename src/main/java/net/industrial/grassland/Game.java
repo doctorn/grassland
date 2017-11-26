@@ -13,8 +13,9 @@ public abstract class Game {
     private GameState currentState;
     private int width, height;
     private String title;
-    private boolean inOrtho = false, fullscreen = false;
+    private boolean fullscreen = false;
     private Graphics graphics;
+    private int fps = 0, frameCount = 0, cumulativeDelta = 0;
 
     public Game(String title, int width, int height, boolean fullscreen) {
         this.width = width;
@@ -52,6 +53,14 @@ public abstract class Game {
                 int delta = (int) (System.currentTimeMillis() - lastLoop);
                 lastLoop = System.currentTimeMillis();
                 
+                frameCount++;
+                cumulativeDelta += delta;
+                if (frameCount == 10) {
+                    frameCount = 0;
+                    fps = 10000 / cumulativeDelta;
+                    cumulativeDelta = 0;
+                }
+             
                 int remainder = delta % 10;
                 int step = delta / 10;
                 for (int i = 0; i < step; i++) 
@@ -90,5 +99,9 @@ public abstract class Game {
 
     public GameState currentState() {
         return currentState;
+    }
+
+    public int getFPS() {
+        return fps;
     }
 }

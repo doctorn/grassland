@@ -4,19 +4,15 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class Sprite {
     private int width, height;
-    private int rWidth, rHeight;
     private int coordX, coordY;
     private SpriteSheet sheet;
 
-    public Sprite(SpriteSheet sheet, int coordX, int coordY, 
-            int width, int height) {
+    public Sprite(SpriteSheet sheet, int coordX, int coordY) {
         this.coordX = coordX;
         this.coordY = coordY;
         this.sheet = sheet;
-        this.width = width;
-        this.height = height;
-        this.rWidth = width;
-        this.rHeight = height;
+        this.width = sheet.getSpriteWidth();
+        this.height = sheet.getSpriteHeight();
     }
 
     public Sprite(Sprite other) {
@@ -25,33 +21,35 @@ public class Sprite {
         sheet = other.sheet;
         width = other.width;
         height = other.height;
-        rWidth = other.rHeight;
-        rHeight = other.rHeight;
     }
 
     public Vector2f getStartVector() {
-        return new Vector2f((float) coordX * width / (float) sheet.getWidth(),
-                (float) coordY * height / (float) sheet.getHeight());
+        return new Vector2f((float) coordX * sheet.getSpriteWidth() / 
+                (float) sheet.getWidth(),
+                (float) coordY * sheet.getSpriteHeight() / 
+                (float) sheet.getHeight());
     }
 
     public Vector2f getSizeVector() {
-        return new Vector2f((float) width / (float) sheet.getWidth(),
-                (float) height / (float) sheet.getHeight());
+        return new Vector2f((float) sheet.getSpriteWidth() / 
+                (float) sheet.getWidth(),
+                (float) sheet.getSpriteHeight() / 
+                (float) sheet.getHeight());
     }
     
     public Sprite scale(float sf) {
         Sprite scaled = new Sprite(this);
-        scaled.rWidth = Math.round(sf * rWidth); 
-        scaled.rHeight = Math.round(sf * rHeight);
+        scaled.width = Math.round(sf * width); 
+        scaled.height = Math.round(sf * height);
         return scaled;
     }
 
     public int getWidth() {
-        return rWidth;
+        return width;
     }
 
     public int getHeight() {
-        return rHeight;
+        return height;
     }
 
     public int getID() {

@@ -16,7 +16,7 @@ public abstract class GameState {
     private Camera active;
 
     private boolean debug = false;
-    private boolean lightingEnabled = false;
+    private boolean lighting = false, perspective = true;
     
     public GameState() {
         setLighting(false);
@@ -38,7 +38,7 @@ public abstract class GameState {
     
     public void renderDefault(Game game, Graphics graphics) 
             throws LWJGLException {
-        if (lightingEnabled) glEnable(GL_LIGHTING);
+        if (lighting) glEnable(GL_LIGHTING);
         if (debug) {
             for (Light light : lights) light.renderDebug(game, graphics);
             for (Camera camera : cameras) camera.renderDebug(game, graphics); 
@@ -87,21 +87,33 @@ public abstract class GameState {
             glDisable(GL_LIGHTING);
         }
         
-        lightingEnabled = lighting;
+        this.lighting = lighting;
     }
 
     public void toggleLighting() {
-        if (!lightingEnabled) {
+        if (!lighting) {
             glEnable(GL_LIGHTING);
             glShadeModel(GL_SMOOTH);
         } else {
             glDisable(GL_LIGHTING);
         }
         
-        lightingEnabled = !lightingEnabled;
+        lighting = !lighting;
     }
 
     public boolean lightEnabled() {
-        return lightingEnabled;
+        return lighting;
+    }
+
+    public void setPerspective(boolean perspective) {
+        this.perspective = perspective;
+    }
+
+    public void togglePerspective() {
+        perspective = !perspective;
+    }
+
+    public boolean perspectiveEnabled() {
+        return perspective;
     }
 }

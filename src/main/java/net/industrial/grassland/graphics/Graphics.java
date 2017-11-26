@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import net.industrial.grassland.Game;
+import net.industrial.grassland.resources.Font;
 import net.industrial.grassland.resources.Sprite;
 import net.industrial.grassland.scene.Camera;
 import org.lwjgl.util.vector.Vector2f;
@@ -15,7 +16,6 @@ import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.util.glu.GLU.*;
 
 public class Graphics {
-    private boolean perspective = true;
     private List<Quad> quads = new ArrayList<>(),
             orthoQuads = new ArrayList<>();
     private Game game;
@@ -71,15 +71,22 @@ public class Graphics {
                 game.currentState().getCamera()));
     }
 
+    public void drawString(Font font, String text, int x, int y) {
+        for (int i = 0; i < text.length(); i++)
+            drawImage(font.getCharacter(text.charAt(i)), x + i * font.getCharacterWidth(), y);
+    }
+
     public void render() {
         glEnable(GL_DEPTH_TEST);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluPerspective(45.0f, 
-                ((float) game.getWidth()) / ((float) game.getHeight()), 
-                0.1f, 
-                100.0f);
-        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+        float aspect = ((float) game.getWidth()) / ((float) game.getHeight());
+        if (game.currentState().perspectiveEnabled()) {
+            gluPerspective(45.0f, aspect, 0.1f, 100.0f);
+            glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+        } else {
+            glOrtho(- aspect / 2f, aspect / 2f, -0.5f, 0.5f, 0.1f, 100f);
+        }
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         if (game.currentState().getCamera() != null)
