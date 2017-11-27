@@ -10,7 +10,10 @@ import org.lwjgl.opengl.DisplayMode;
 
 public abstract class Game {
     private List<GameState> states;
-    private GameState currentState;
+    private GameState currentState, targetState;
+    private boolean changingState = false;
+    private float transitionCooldown = 0f;
+
     private int width, height;
     private String title;
     private boolean fullscreen = false;
@@ -60,6 +63,19 @@ public abstract class Game {
                     fps = 10000 / cumulativeDelta;
                     cumulativeDelta = 0;
                 }
+                
+                if (changingState) {
+                    transitionCooldown += 0.002f * delta;
+                    if (transitionCooldown > 1f) {
+                        transitionCooldown = 1f;
+                        changingState = false;
+                        currentState = targetState;
+                    }
+                } else if (transitionCooldown > 0f) {
+                    transitionCooldown -= 0.002f * delta;
+                    if (transitionCooldown < 0f) 
+                        transitionCooldown = 0f;
+                }
              
                 int remainder = delta % 10;
                 int step = delta / 10;
@@ -67,7 +83,7 @@ public abstract class Game {
                     currentState.updateDefault(this, 10); 
                 if (remainder != 0) 
                     currentState.updateDefault(this, remainder); 
-               
+              
                 graphics.clear();
                 currentState.renderDefault(this, graphics);
                 graphics.render();
@@ -80,8 +96,15 @@ public abstract class Game {
     }
 
     public void enterState(int newState) {
-        for (GameState state : states) {
-            if (state.getId() == newState) currentState = state;
+        if (currentState != null) {
+            changingState = true;
+            for (GameState state : states) {
+                if (state.getId() == newState) targetState = state;
+            }
+        } else {
+            for (GameState state : states) {
+                if (state.getId() == newState) currentState = state;
+            }
         }
     }
 
@@ -103,5 +126,9 @@ public abstract class Game {
 
     public int getFPS() {
         return fps;
+    }
+
+    public float getTransitionAlpha() {
+        return transitionCooldown;
     }
 }

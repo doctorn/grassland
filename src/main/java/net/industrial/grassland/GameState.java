@@ -17,7 +17,8 @@ public abstract class GameState {
 
     private boolean debug = false;
     private boolean lighting = false, perspective = true;
-    
+    private float renderDistance = 100f;
+
     public GameState() {
         setLighting(false);
     }
@@ -115,5 +116,13 @@ public abstract class GameState {
 
     public boolean perspectiveEnabled() {
         return perspective;
+    }
+
+    public float getRenderDistance() {
+        return renderDistance;
+    }
+
+    public void setRenderDistance(float renderDistance) {
+        this.renderDistance = renderDistance; 
     }
 }

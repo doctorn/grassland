@@ -73,6 +73,7 @@ public class SpriteSheet {
         spriteHeight = other.spriteHeight;
         width = other.width;
         height = other.height;
+        hasAlpha = other.hasAlpha;
     }
 
     public int getWidth() {

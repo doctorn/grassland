@@ -24,7 +24,6 @@ public class Graphics {
         GL_LIGHT0, GL_LIGHT1, GL_LIGHT2, GL_LIGHT3, 
         GL_LIGHT4, GL_LIGHT5, GL_LIGHT6, GL_LIGHT7 
     };
-    private float renderDistance = 100f;
 
     public Graphics(Game game) {
         this.game = game; 
@@ -41,17 +40,18 @@ public class Graphics {
         orthoQuads = new ArrayList<Quad>();
         alphaQuads = new ArrayList<Quad>();
     }
-
-    public void setRenderDistance(float renderDistance) {
-        this.renderDistance = renderDistance;
+   
+    public void setColour(float r, float g, float b, float a) {
+        glColor4f(r, g, b, a);
     }
-    
+
     public void setBackgroundColour(float r, float g, float b) {
         glClearColor(r, g, b, 1f);    
     }
 
     public void drawCuboid(Vector3f position, 
             float dX, float dY, float dZ) {
+        setColour(1.0f, 1.0f, 1.0f, 1.0f);
         //TODO use quads 
     }
     
@@ -64,7 +64,7 @@ public class Graphics {
                 sprite, sprite.getStartVector(), sprite.getSizeVector(),
                 game.currentState().getCamera()));
     } 
-   
+ 
     public void drawImage(Sprite sprite, int x, int y) {
         Vector3f position = 
             new Vector3f(x + sprite.getWidth() / 2, y + sprite.getHeight() / 2, 0);
@@ -85,6 +85,7 @@ public class Graphics {
         glEnable(GL_DEPTH_TEST);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
+        glColor4f(1f, 1f, 1f, 1f); 
         float aspect = ((float) game.getWidth()) / ((float) game.getHeight());
         if (game.currentState().perspectiveEnabled()) {
             gluPerspective(45.0f, aspect, 0.1f, 100.0f);
@@ -103,7 +104,7 @@ public class Graphics {
         Iterator<Quad> it = quads.iterator();
         while (it.hasNext()) {
             Quad quad = it.next();
-            if (quad.getDistance() < renderDistance) 
+            if (quad.getDistance() < game.currentState().getRenderDistance()) 
                 quad.render();
         }
         
@@ -111,7 +112,7 @@ public class Graphics {
         it = alphaQuads.iterator();
         while (it.hasNext()) {
             Quad quad = it.next();
-            if (quad.getDistance() < renderDistance)
+            if (quad.getDistance() < game.currentState().getRenderDistance())
                 quad.render();
         }
      
@@ -125,5 +126,13 @@ public class Graphics {
      
         it = orthoQuads.iterator();
         while (it.hasNext()) it.next().render();
+        
+        glColor4f(0f, 0f, 0f, game.getTransitionAlpha());
+        glBegin(GL_QUADS);
+        glVertex3f(0, game.getHeight(), 0);
+        glVertex3f(game.getWidth(), game.getHeight(), 0);
+        glVertex3f(game.getWidth(), 0, 0);
+        glVertex3f(0, 0, 0);
+        glEnd();
     }
 }
