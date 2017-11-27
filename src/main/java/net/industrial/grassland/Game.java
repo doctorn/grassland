@@ -2,11 +2,14 @@ package net.industrial.grassland;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.industrial.grassland.GrasslandException;
-import net.industrial.grassland.graphics.Graphics;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+
+import net.industrial.grassland.GrasslandException;
+import net.industrial.grassland.audio.AudioMaster;
+import net.industrial.grassland.graphics.Graphics;
 
 public abstract class Game {
     private List<GameState> states;
@@ -17,9 +20,10 @@ public abstract class Game {
     private int width, height;
     private String title;
     private boolean fullscreen = false;
+
     private Graphics graphics;
     private int fps = 0, frameCount = 0, cumulativeDelta = 0;
-
+    
     public Game(String title, int width, int height, boolean fullscreen) {
         this.width = width;
         this.height = height;
@@ -38,6 +42,7 @@ public abstract class Game {
             Display.setFullscreen(fullscreen);
             Display.create();
             
+            AudioMaster.init();
             graphics = new Graphics(this);
             states = new ArrayList<GameState>();
             initStates();
@@ -90,6 +95,7 @@ public abstract class Game {
                 graphics.render();
                 Display.update();
             } while (!Display.isCloseRequested());
+            AudioMaster.cleanUp();
             Display.destroy();
         } catch (LWJGLException e) {
             throw new GrasslandException();
