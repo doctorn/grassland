@@ -6,13 +6,15 @@ public class Sprite {
     private int width, height;
     private int coordX, coordY;
     private SpriteSheet sheet;
+    private boolean hasAlpha;
 
     public Sprite(SpriteSheet sheet, int coordX, int coordY) {
         this.coordX = coordX;
         this.coordY = coordY;
         this.sheet = sheet;
-        this.width = sheet.getSpriteWidth();
-        this.height = sheet.getSpriteHeight();
+        width = sheet.getSpriteWidth();
+        height = sheet.getSpriteHeight();
+        hasAlpha = sheet.hasAlpha();
     }
 
     public Sprite(Sprite other) {
@@ -21,6 +23,7 @@ public class Sprite {
         sheet = other.sheet;
         width = other.width;
         height = other.height;
+        hasAlpha = other.hasAlpha;
     }
 
     public Vector2f getStartVector() {
@@ -54,5 +57,9 @@ public class Sprite {
 
     public int getID() {
         return sheet.getID();
+    }
+
+    public boolean hasAlpha() {
+        return hasAlpha;
     }
 }

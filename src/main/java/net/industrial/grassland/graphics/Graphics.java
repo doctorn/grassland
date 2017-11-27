@@ -17,13 +17,14 @@ import static org.lwjgl.util.glu.GLU.*;
 
 public class Graphics {
     private List<Quad> quads = new ArrayList<>(),
-            orthoQuads = new ArrayList<>();
+            orthoQuads = new ArrayList<>(),
+            alphaQuads = new ArrayList<>();
     private Game game;
     private static final int[] LIGHTS = {
         GL_LIGHT0, GL_LIGHT1, GL_LIGHT2, GL_LIGHT3, 
         GL_LIGHT4, GL_LIGHT5, GL_LIGHT6, GL_LIGHT7 
     };
-    private float renderDistance = 50f;
+    private float renderDistance = 100f;
 
     public Graphics(Game game) {
         this.game = game; 
@@ -38,6 +39,7 @@ public class Graphics {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         quads = new ArrayList<Quad>();
         orthoQuads = new ArrayList<Quad>();
+        alphaQuads = new ArrayList<Quad>();
     }
 
     public void setRenderDistance(float renderDistance) {
@@ -55,11 +57,14 @@ public class Graphics {
     
     public void fillQuad(Vector3f p, Vector3f n, Vector3f a, 
             float l, float w, Sprite sprite) {
-        quads.add(new Quad(p, n, a, l, w, false, 
+        if (!sprite.hasAlpha()) quads.add(new Quad(p, n, a, l, w, false, 
                 sprite, sprite.getStartVector(), sprite.getSizeVector(),
                 game.currentState().getCamera()));
-    }
-
+        else alphaQuads.add(new Quad(p, n, a, l, w, false, 
+                sprite, sprite.getStartVector(), sprite.getSizeVector(),
+                game.currentState().getCamera()));
+    } 
+   
     public void drawImage(Sprite sprite, int x, int y) {
         Vector3f position = 
             new Vector3f(x + sprite.getWidth() / 2, y + sprite.getHeight() / 2, 0);
@@ -95,14 +100,21 @@ public class Graphics {
         for (int i = 0; i < 8 && i < game.currentState().getLights().size(); i++)
             game.currentState().getLights().get(i).render(LIGHTS[i]); 
      
-        Collections.sort(quads);
         Iterator<Quad> it = quads.iterator();
         while (it.hasNext()) {
             Quad quad = it.next();
-            if (quad.getDistance() > -renderDistance && quad.getDistance() < 1f) 
+            if (quad.getDistance() < renderDistance) 
                 quad.render();
         }
         
+        Collections.sort(alphaQuads);
+        it = alphaQuads.iterator();
+        while (it.hasNext()) {
+            Quad quad = it.next();
+            if (quad.getDistance() < renderDistance)
+                quad.render();
+        }
+     
         glLoadIdentity();
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_LIGHTING); 

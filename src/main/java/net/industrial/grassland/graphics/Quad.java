@@ -48,11 +48,11 @@ public class Quad implements Comparable<Quad> {
                 position.z + (l / 2f) * lAxis.z - (w / 2f) * wAxis.z);
        
         if (camera != null) {
-            distance = Float.POSITIVE_INFINITY;
+            distance = Float.NEGATIVE_INFINITY;
             for (int i = 0; i < 4; i++) {
                 Vector3f d = Vector3f.sub(vertices[i], camera.getPosition(), null);
-                float potential = Vector3f.dot(d, camera.lookVector());
-                if (potential < distance) distance = potential;
+                float potential = d.length();
+                if (potential > distance) distance = potential;
             }
         } else distance = 0;
     }
@@ -108,8 +108,8 @@ public class Quad implements Comparable<Quad> {
 
     @Override
     public int compareTo(Quad other) {
-        if (distance - other.distance > 0) return 1;
-        else if (distance - other.distance < 0) return -1;
+        if (distance - other.distance < 0) return 1;
+        else if (distance - other.distance > 0) return -1;
         else return 0;
     }
 }

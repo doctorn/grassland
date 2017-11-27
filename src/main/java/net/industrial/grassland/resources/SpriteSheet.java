@@ -16,6 +16,7 @@ public class SpriteSheet {
     private int id;
     private int width, height;
     private int spriteWidth, spriteHeight;
+    private boolean hasAlpha = false;
 
     public SpriteSheet(String file, int spriteWidth, int spriteHeight) 
             throws GrasslandException {
@@ -32,6 +33,7 @@ public class SpriteSheet {
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     Color color = new Color(image.getRGB(i, j), true);
+                    if (color.getAlpha() < 255) hasAlpha = true;
                     buffer.put((i + j * width) * 4 + 0, (byte) color.getRed());
                     buffer.put((i + j * width) * 4 + 1, (byte) color.getGreen());
                     buffer.put((i + j * width) * 4 + 2, (byte) color.getBlue());
@@ -95,6 +97,10 @@ public class SpriteSheet {
 
     public int getColumns() {
         return width / spriteWidth;
+    }
+    
+    public boolean hasAlpha() {
+        return hasAlpha;
     }
 
     public SpriteSheet scale(float sf) {
