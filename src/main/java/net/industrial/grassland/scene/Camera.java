@@ -7,15 +7,20 @@ import static org.lwjgl.util.glu.GLU.*;
 
 public abstract class Camera {
     private Vector3f position = new Vector3f();
-    private float pitch = 0f, yaw = 0f;
-    
+    private float pitch = 0f, yaw = 0f, level = 0f;
+     
     public void look() {
         Vector3f l = lookVector();
-        gluLookAt(position.x, position.y, position.z,
-            position.x - l.x, 
-            position.y - l.y, 
-            position.z - l.z,  
+        Vector3f u = Vector3f.cross(flatLookVector(), flatAxisVector(), null);
+        Vector3f shake = Vector3f.add((Vector3f) u.scale(2f * (float) Math.random() - 1f), 
+                (Vector3f) flatAxisVector().scale(2f * (float) Math.random() - 1f), null);
+        shake = (Vector3f) shake.scale(0.05f);
+        gluLookAt(position.x + level * shake.x, position.y + level * shake.y, position.z + level * shake.z,
+            position.x - l.x + level * shake.x, 
+            position.y - l.y + level * shake.y, 
+            position.z - l.z + level * shake.z,  
             0f, 1f, 0f);
+        level = 0f;
     }
 
     public Vector3f lookVector() {
@@ -85,5 +90,9 @@ public abstract class Camera {
 
     public float getYaw() {
         return yaw;
+    }
+
+    public void screenShake(float level) {
+        this.level += level;
     }
 }

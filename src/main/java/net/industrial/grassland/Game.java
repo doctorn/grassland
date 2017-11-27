@@ -32,7 +32,8 @@ public abstract class Game {
     public void init() 
             throws GrasslandException {
         try {
-            Display.setDisplayMode(new DisplayMode(width, height));
+            if (!fullscreen) Display.setDisplayMode(new DisplayMode(width, height));
+            else Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
             Display.setTitle(title);
             Display.setFullscreen(fullscreen);
             Display.create();
