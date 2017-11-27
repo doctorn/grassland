@@ -24,6 +24,9 @@ public class Quad implements Comparable<Quad> {
             texture = sprite.getID();
             this.tStart = tStart;
             this.tSize = tSize;
+        } else {
+            this.tStart = new Vector2f();
+            this.tSize = new Vector2f();
         }
      
         this.normal = (Vector3f) normal.normalise();

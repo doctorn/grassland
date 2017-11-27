@@ -40,10 +40,6 @@ public class Graphics {
         orthoQuads = new ArrayList<Quad>();
         alphaQuads = new ArrayList<Quad>();
     }
-   
-    public void setColour(float r, float g, float b, float a) {
-        glColor4f(r, g, b, a);
-    }
 
     public void setBackgroundColour(float r, float g, float b) {
         glClearColor(r, g, b, 1f);    
@@ -51,8 +47,22 @@ public class Graphics {
 
     public void drawCuboid(Vector3f position, 
             float dX, float dY, float dZ) {
-        setColour(1.0f, 1.0f, 1.0f, 1.0f);
-        //TODO use quads 
+        quads.add(new Quad(
+                new Vector3f(position.x + dX / 2, position.y, position.z),
+                new Vector3f(1f, 0, 0), new Vector3f(0, 1f, 0), 
+                dY, dZ, true, null, null, null, game.currentState().getCamera()));
+        quads.add(new Quad(
+                new Vector3f(position.x - dX / 2, position.y, position.z),
+                new Vector3f(1f, 0, 0), new Vector3f(0, 1f, 0), 
+                dY, dZ, true, null, null, null, game.currentState().getCamera()));
+        quads.add(new Quad(
+                new Vector3f(position.x, position.y, position.z - dZ / 2),
+                new Vector3f(0, 0, 1f), new Vector3f(1f, 0, 0), 
+                dX, dY, true, null, null, null, game.currentState().getCamera()));
+        quads.add(new Quad(
+                new Vector3f(position.x, position.y, position.z + dZ / 2),
+                new Vector3f(0, 0, 1f), new Vector3f(1f, 0, 0), 
+                dX, dY, true, null, null, null, game.currentState().getCamera()));
     }
     
     public void fillQuad(Vector3f p, Vector3f n, Vector3f a, 
@@ -78,7 +88,8 @@ public class Graphics {
 
     public void drawString(Font font, String text, int x, int y) {
         for (int i = 0; i < text.length(); i++)
-            drawImage(font.getCharacter(text.charAt(i)), x + i * font.getCharacterWidth(), y);
+            drawImage(font.getCharacter(text.charAt(i)), 
+                    x + i * font.getCharacterWidth(), y);
     }
 
     public void render() {
