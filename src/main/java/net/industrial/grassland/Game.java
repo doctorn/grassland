@@ -45,7 +45,7 @@ public abstract class Game {
             Display.setTitle(title);
             Display.setFullscreen(fullscreen);
             Display.create();
-
+         
             AudioMaster.init();
             graphics = new Graphics(this);
             keyInputs = new Input();
@@ -111,7 +111,7 @@ public abstract class Game {
         Camera camera = currentState.getCamera();
         if (camera != null) AudioMaster.setListenerData(camera.getPosition());
         else AudioMaster.setListenerData(new Vector3f());
-        currentState.update(this, delta);
+        currentState.updateDefault(this, delta);
     }
 
     public void enterState(int newState) {

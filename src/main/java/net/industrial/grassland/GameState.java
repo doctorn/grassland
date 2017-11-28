@@ -30,7 +30,7 @@ public abstract class GameState {
             throws GrasslandException;
    
     public void updateDefault(Game game, int delta) 
-            throws LWJGLException {
+            throws GrasslandException {
         for (Camera camera : cameras) camera.update(game, delta); 
         for (Light light : lights) light.update(game, delta);
         Collections.sort(lights);
@@ -45,7 +45,7 @@ public abstract class GameState {
             throws GrasslandException;
     
     public void renderDefault(Game game, Graphics graphics) 
-            throws LWJGLException {
+            throws GrasslandException {
         if (lighting) glEnable(GL_LIGHTING);
         if (debug) {
             for (Light light : lights) light.renderDebug(game, graphics);
