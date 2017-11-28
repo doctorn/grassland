@@ -101,9 +101,8 @@ public class Graphics {
         if (game.currentState().perspectiveEnabled()) {
             gluPerspective(45.0f, aspect, 0.1f, 100.0f);
             glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-        } else {
-            glOrtho(- aspect / 2f, aspect / 2f, -0.5f, 0.5f, 0.1f, 100f);
-        }
+        } else glOrtho(- aspect / 2f, aspect / 2f, -0.5f, 0.5f, 0.1f, 100f);
+        
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         if (game.currentState().getCamera() != null)

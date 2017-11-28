@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.industrial.grassland.GrasslandException;
+import net.industrial.grassland.audio.Sound;
 import net.industrial.grassland.graphics.Graphics;
 import net.industrial.grassland.scene.Camera;
 import net.industrial.grassland.scene.Light;
@@ -14,6 +15,8 @@ public abstract class GameState {
     private List<Light> lights = new ArrayList<>();
     private List<Camera> cameras = new ArrayList<>();
     private Camera active;
+
+    private Sound music;
 
     private boolean debug = false;
     private boolean lighting = false, perspective = true;
@@ -30,7 +33,11 @@ public abstract class GameState {
             throws LWJGLException {
         for (Camera camera : cameras) camera.update(game, delta); 
         for (Light light : lights) light.update(game, delta);
-        Collections.sort(lights); 
+        Collections.sort(lights);
+     
+        if (music != null && active!= null)
+            music.setPosition(active.getPosition());
+        
         update(game, delta);
     }
     
@@ -124,5 +131,16 @@ public abstract class GameState {
 
     public void setRenderDistance(float renderDistance) {
         this.renderDistance = renderDistance; 
+    }
+
+    public void setMusic(Sound music) {
+        this.music = music;
+        music.setLooping(true);
+        if (active != null) music.setPosition(active.getPosition());
+        music.play();
+    }
+
+    public void setMusicVolume(float volume) {
+        music.setVolume(volume);
     }
 }
