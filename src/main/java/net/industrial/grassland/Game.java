@@ -10,6 +10,8 @@ import org.lwjgl.opengl.DisplayMode;
 import net.industrial.grassland.GrasslandException;
 import net.industrial.grassland.audio.AudioMaster;
 import net.industrial.grassland.graphics.Graphics;
+import net.industrial.grassland.graphics.Vector3f;
+import net.industrial.grassland.scene.Camera;
 
 public abstract class Game {
     private List<GameState> states;
@@ -103,10 +105,11 @@ public abstract class Game {
         }
     }
 
-    private void update(int delta) {
+    private void update(int delta) 
+            throws GrasslandException {
         keyInputs.update();
         Camera camera = currentState.getCamera();
-        if (camera != null) AudioMaster.setListenerData(camera.getPosition);
+        if (camera != null) AudioMaster.setListenerData(camera.getPosition());
         else AudioMaster.setListenerData(new Vector3f());
         currentState.update(this, delta);
     }
