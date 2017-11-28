@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -23,6 +24,8 @@ public abstract class Game {
 
     private Graphics graphics;
     private int fps = 0, frameCount = 0, cumulativeDelta = 0;
+
+    private Input keyInputs;
     
     public Game(String title, int width, int height, boolean fullscreen) {
         this.width = width;
@@ -41,9 +44,10 @@ public abstract class Game {
             Display.setTitle(title);
             Display.setFullscreen(fullscreen);
             Display.create();
-            
+
             AudioMaster.init();
             graphics = new Graphics(this);
+            keyInputs = new Input();
             states = new ArrayList<GameState>();
             initStates();
          
@@ -82,13 +86,17 @@ public abstract class Game {
                     if (transitionCooldown < 0f) 
                         transitionCooldown = 0f;
                 }
-             
+
                 int remainder = delta % 10;
                 int step = delta / 10;
-                for (int i = 0; i < step; i++) 
-                    currentState.updateDefault(this, 10); 
-                if (remainder != 0) 
-                    currentState.updateDefault(this, remainder); 
+                for (int i = 0; i < step; i++) {
+                    keyInputs.update();
+                    currentState.updateDefault(this, 10);
+                }
+                if (remainder != 0) {
+                    keyInputs.update();
+                    currentState.updateDefault(this, remainder);
+                }
               
                 graphics.clear();
                 currentState.renderDefault(this, graphics);
@@ -137,5 +145,9 @@ public abstract class Game {
 
     public float getTransitionAlpha() {
         return transitionCooldown;
+    }
+
+    public Input getKeyInputs() {
+        return keyInputs;
     }
 }
