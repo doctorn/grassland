@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -58,7 +57,7 @@ public abstract class Game {
         }
     }
 
-    public void loop() 
+    private void loop() 
             throws GrasslandException {
         try { 
             long lastLoop = System.currentTimeMillis();
@@ -86,17 +85,11 @@ public abstract class Game {
                     if (transitionCooldown < 0f) 
                         transitionCooldown = 0f;
                 }
-
+             
                 int remainder = delta % 10;
                 int step = delta / 10;
-                for (int i = 0; i < step; i++) {
-                    keyInputs.update();
-                    currentState.updateDefault(this, 10);
-                }
-                if (remainder != 0) {
-                    keyInputs.update();
-                    currentState.updateDefault(this, remainder);
-                }
+                for (int i = 0; i < step; i++) update(10); 
+                if (remainder != 0) update(remainder); 
               
                 graphics.clear();
                 currentState.renderDefault(this, graphics);
@@ -108,6 +101,14 @@ public abstract class Game {
         } catch (LWJGLException e) {
             throw new GrasslandException();
         }
+    }
+
+    private void update(int delta) {
+        keyInputs.update();
+        Camera camera = currentState.getCamera();
+        if (camera != null) AudioMaster.setListenerData(camera.getPosition);
+        else AudioMaster.setListenerData(new Vector3f());
+        currentState.update(this, delta);
     }
 
     public void enterState(int newState) {

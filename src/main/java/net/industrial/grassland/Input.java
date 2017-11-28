@@ -3,10 +3,8 @@ package net.industrial.grassland;
 import org.lwjgl.input.Keyboard;
 
 public class Input {
-
     private boolean[] currentKeys;
     private boolean[] previousKeys;
-
 
     public Input() {
         Keyboard.enableRepeatEvents(true);
@@ -17,26 +15,21 @@ public class Input {
 
     public void update() {
         Keyboard.poll();
-
+     
         int keys = Keyboard.getKeyCount();
         currentKeys = new boolean[keys];
         previousKeys = new boolean[keys];
-
+     
         while (Keyboard.next()) {
             if(Keyboard.getEventKeyState()) {
-                //pressed
                 for (int i = 0; i < keys; i++){
                     if (Keyboard.getEventKey() == i)
-                        if (Keyboard.isRepeatEvent())
-                            previousKeys[i] = true;
-                        else
-                            currentKeys[i] = true;
+                        if (Keyboard.isRepeatEvent()) previousKeys[i] = true;
+                        else currentKeys[i] = true;
                 }
             } else {
-                //released
                 for (int i = 0; i < keys; i++){
-                    if (Keyboard.getEventKey() == i)
-                        currentKeys[i] = false;
+                    if (Keyboard.getEventKey() == i) currentKeys[i] = false;
                 }
             }
         }
@@ -49,5 +42,4 @@ public class Input {
     public boolean isKeyDown(int key) {
         return Keyboard.isKeyDown(key);
     }
-
 }
