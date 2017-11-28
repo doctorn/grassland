@@ -5,12 +5,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import net.industrial.grassland.Game;
+import net.industrial.grassland.graphics.Vector2f;
+import net.industrial.grassland.graphics.Vector3f;
 import net.industrial.grassland.resources.Font;
 import net.industrial.grassland.resources.Sprite;
 import net.industrial.grassland.scene.Camera;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector3f;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.util.glu.GLU.*;
@@ -64,6 +63,33 @@ public class Graphics {
                 new Vector3f(0, 0, 1f), new Vector3f(1f, 0, 0), 
                 dX, dY, true, null, null, null, game.currentState().getCamera()));
     }
+   
+    public void fillCuboid(Vector3f p, Vector3f n, Vector3f a,
+            float l, float w, float d,
+            Sprite sprite) {
+        fillCuboid(p, n, a, l, w, d, sprite, sprite, sprite);
+    } 
+
+    public void fillCuboid(Vector3f p, Vector3f n, Vector3f a,
+            float l, float w, float d,
+            Sprite top, Sprite side, Sprite bottom) {
+        fillCuboid(p, n, a, l, w, d, top, side, side, side, side, bottom);
+    }
+
+    public void fillCuboid(Vector3f p, Vector3f n, Vector3f a, 
+            float l, float w, float d, 
+            Sprite top, Sprite front, Sprite right, 
+            Sprite back, Sprite left, Sprite bottom) {
+        n = n.normalise();
+        a = a.normalise();
+        Vector3f u = n.cross(a);
+        fillQuad(p.add(n.scale(d / 2f)), n, a, l, w, front);
+        fillQuad(p.sub(n.scale(d / 2f)), n.scale(-1f), a.scale(-1f), l, w, back);
+        fillQuad(p.add(a.scale(l / 2f)), a, n.scale(-1f), w, d, right);
+        fillQuad(p.sub(a.scale(l / 2f)), a.scale(-1f), n, w, d, left);
+        fillQuad(p.add(u.scale(w / 2f)), u, a.scale(-1f), l, d, top);
+        fillQuad(p.sub(u.scale(w / 2f)), u.scale(-1f), a, l, d, bottom);
+    }
     
     public void fillQuad(Vector3f p, Vector3f n, Vector3f a, 
             float l, float w, Sprite sprite) {
@@ -101,7 +127,7 @@ public class Graphics {
         if (game.currentState().perspectiveEnabled()) {
             gluPerspective(45.0f, aspect, 0.1f, 100.0f);
             glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-        } else glOrtho(- aspect / 2f, aspect / 2f, -0.5f, 0.5f, 0.1f, 100f);
+        } else glOrtho(- aspect / 2f, aspect / 2f, -0.5f, 0.5f, -100f, 100f);
         
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();

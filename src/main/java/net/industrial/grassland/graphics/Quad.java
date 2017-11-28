@@ -1,9 +1,9 @@
 package net.industrial.grassland.graphics;
 
+import net.industrial.grassland.graphics.Vector2f;
+import net.industrial.grassland.graphics.Vector3f;
 import net.industrial.grassland.resources.Sprite;
 import net.industrial.grassland.scene.Camera;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Quad implements Comparable<Quad> {
@@ -29,9 +29,9 @@ public class Quad implements Comparable<Quad> {
             this.tSize = new Vector2f();
         }
      
-        this.normal = (Vector3f) normal.normalise();
-        lAxis = (Vector3f) lAxis.normalise();
-        Vector3f wAxis = (Vector3f) Vector3f.cross(lAxis, normal, null).normalise();
+        this.normal = normal.normalise();
+        lAxis = lAxis.normalise();
+        Vector3f wAxis = lAxis.cross(normal).normalise();
         
         vertices[0] = new Vector3f(
                 position.x - (l / 2f) * lAxis.x - (w / 2f) * wAxis.x,
@@ -53,7 +53,7 @@ public class Quad implements Comparable<Quad> {
         if (camera != null) {
             distance = Float.NEGATIVE_INFINITY;
             for (int i = 0; i < 4; i++) {
-                Vector3f d = Vector3f.sub(vertices[i], camera.getPosition(), null);
+                Vector3f d = vertices[i].sub(camera.getPosition());
                 float potential = d.length();
                 if (potential > distance) distance = potential;
             }

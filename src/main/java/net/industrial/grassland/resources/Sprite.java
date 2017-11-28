@@ -1,6 +1,6 @@
 package net.industrial.grassland.resources;
 
-import org.lwjgl.util.vector.Vector2f;
+import net.industrial.grassland.graphics.Vector2f;
 
 public class Sprite {
     private int width, height;

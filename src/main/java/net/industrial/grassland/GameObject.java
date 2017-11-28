@@ -2,10 +2,9 @@ package net.industrial.grassland;
 
 import org.lwjgl.LWJGLException;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import net.industrial.grassland.GrasslandException;
 import net.industrial.grassland.graphics.Graphics;
+import net.industrial.grassland.graphics.Vector3f;
 
 public abstract class GameObject {
     private boolean willDie = false;

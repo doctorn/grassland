@@ -4,8 +4,8 @@ import java.nio.FloatBuffer;
 import net.industrial.grassland.Game;
 import net.industrial.grassland.GameObject;
 import net.industrial.grassland.graphics.Graphics;
+import net.industrial.grassland.graphics.Vector3f;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.util.vector.Vector3f;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Light implements Comparable<Light> {
@@ -51,8 +51,8 @@ public class Light implements Comparable<Light> {
     public void update(Game game, int delta) {
         Camera camera = game.currentState().getCamera(); 
         if (camera != null && !ambient) {
-            Vector3f d = Vector3f.sub(position, camera.getPosition(), null);
-            distance = (Vector3f.sub(d, camera.getPosition(), null)).length();
+            Vector3f d = position.sub(camera.getPosition());
+            distance = d.sub(camera.getPosition()).length();
         } else distance = 0;
      
         if (tracking && !tracked.willDie()) {

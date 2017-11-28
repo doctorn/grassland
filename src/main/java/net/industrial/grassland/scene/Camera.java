@@ -2,7 +2,7 @@ package net.industrial.grassland.scene;
 
 import net.industrial.grassland.Game;
 import net.industrial.grassland.graphics.Graphics;
-import org.lwjgl.util.vector.Vector3f;
+import net.industrial.grassland.graphics.Vector3f;
 import static org.lwjgl.util.glu.GLU.*;
 
 public abstract class Camera {
@@ -11,10 +11,10 @@ public abstract class Camera {
      
     public void look() {
         Vector3f l = lookVector();
-        Vector3f u = Vector3f.cross(flatLookVector(), flatAxisVector(), null);
-        Vector3f shake = Vector3f.add((Vector3f) u.scale(2f * (float) Math.random() - 1f), 
-                (Vector3f) flatAxisVector().scale(2f * (float) Math.random() - 1f), null);
-        shake = (Vector3f) shake.scale(0.05f);
+        Vector3f u = flatLookVector().cross(flatAxisVector());
+        Vector3f shake = u.scale(2f * (float) Math.random() - 1f)
+            .add(flatAxisVector().scale(2f * (float) Math.random() - 1f));
+        shake = shake.scale(0.05f);
         gluLookAt(position.x + level * shake.x, position.y + level * shake.y, position.z + level * shake.z,
             position.x - l.x + level * shake.x, 
             position.y - l.y + level * shake.y, 
@@ -24,23 +24,23 @@ public abstract class Camera {
     }
 
     public Vector3f lookVector() {
-        return (Vector3f) (new Vector3f((float) Math.sin(pitch) * (float) Math.sin(yaw),
+        return (new Vector3f((float) Math.sin(pitch) * (float) Math.sin(yaw),
                 - (float) Math.cos(pitch),
                 (float) Math.sin(pitch) * (float) Math.cos(yaw))).normalise();
     }
 
     public Vector3f flatLookVector() {
-        return (Vector3f) (new Vector3f((float) Math.sin(pitch) * (float) Math.sin(yaw),
+        return (new Vector3f((float) Math.sin(pitch) * (float) Math.sin(yaw),
                 0f,
                 (float) Math.sin(pitch) * (float) Math.cos(yaw))).normalise();
     }
     
     public Vector3f axisVector() {
-        return Vector3f.cross(new Vector3f(0f, 1f, 0f), lookVector(), null);
+        return (new Vector3f(0f, 1f, 0f)).cross(lookVector()).normalise();
     }
 
     public Vector3f flatAxisVector() {
-        return Vector3f.cross(new Vector3f(0f, 1f, 0f), flatLookVector(), null);
+        return (new Vector3f(0f, 1f, 0f)).cross(flatLookVector()).normalise();
     }
 
     public abstract void update(Game game, int delta);

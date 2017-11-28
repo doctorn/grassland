@@ -4,16 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-
-import org.lwjgl.LWJGLException;
-import static org.lwjgl.openal.AL.*;
-import static org.lwjgl.openal.AL10.*;
-
-import org.lwjgl.util.WaveData;
-import org.lwjgl.util.vector.Vector3f;
-
 import java.util.*;
 import net.industrial.grassland.GrasslandException;
+import net.industrial.grassland.graphics.Vector3f;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.util.WaveData;
+import static org.lwjgl.openal.AL.*;
+import static org.lwjgl.openal.AL10.*;
 
 public class AudioMaster {
 

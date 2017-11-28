@@ -1,7 +1,7 @@
 package net.industrial.grassland.audio;
 
 import net.industrial.grassland.GrasslandException;
-import org.lwjgl.util.vector.Vector3f;
+import net.industrial.grassland.graphics.Vector3f;
 import static org.lwjgl.openal.AL.*;
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
