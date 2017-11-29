@@ -54,6 +54,7 @@ public abstract class GameState {
         if (debug) {
             for (Light light : lights) light.renderDebug(game, graphics);
             for (Camera camera : cameras) camera.renderDebug(game, graphics); 
+            for (GameObject object : objects) object.renderDebug(game, graphics); 
         }
      
         render(game, graphics);
@@ -103,9 +104,7 @@ public abstract class GameState {
         if (lighting) {
             glEnable(GL_LIGHTING);
             glShadeModel(GL_SMOOTH);
-        } else {
-            glDisable(GL_LIGHTING);
-        }
+        } else glDisable(GL_LIGHTING);
         
         this.lighting = lighting;
     }
@@ -114,9 +113,7 @@ public abstract class GameState {
         if (!lighting) {
             glEnable(GL_LIGHTING);
             glShadeModel(GL_SMOOTH);
-        } else {
-            glDisable(GL_LIGHTING);
-        }
+        } else glDisable(GL_LIGHTING);
         
         lighting = !lighting;
     }
