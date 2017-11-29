@@ -9,12 +9,12 @@ import org.lwjgl.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Light implements Comparable<Light> {
-    private boolean tracking = false;
     private float distance;
     private boolean ambient = false;
     private FloatBuffer colour, attenuation;
 
-    private GameObject tracked;
+    private GameObject trackedObject;
+    private Camera trackedCamera;
     private Vector3f position = new Vector3f();
 
     public Light(float x, float y, float z,
@@ -28,10 +28,20 @@ public class Light implements Comparable<Light> {
         setAttenuation(1.0f);
     }
     
-    public Light(GameObject tracked,
+    public Light(GameObject trackedObject,
             float r, float g, float b) {
-        tracking = true;
-        this.tracked = tracked;
+        this.trackedObject = trackedObject;
+        
+        colour = BufferUtils.createFloatBuffer(4);
+        colour.put(r).put(g).put(b).put(1f);
+        colour.flip();
+        
+        setAttenuation(1.0f); 
+    }
+
+    public Light(Camera trackedCamera,
+            float r, float g, float b) {
+        this.trackedCamera = trackedCamera;
         
         colour = BufferUtils.createFloatBuffer(4);
         colour.put(r).put(g).put(b).put(1f);
@@ -54,9 +64,8 @@ public class Light implements Comparable<Light> {
             distance = d.sub(camera.getPosition()).length();
         } else distance = 0;
      
-        if (tracking && !tracked.willDie()) {
-            setPosition(tracked.getPosition());
-        }
+        if (trackedObject != null) setPosition(trackedObject.getPosition());
+        else if (trackedCamera != null) setPosition(trackedCamera.getPosition());
     }
 
     public void render(int lightNumber) {

@@ -83,6 +83,10 @@ public abstract class GameState {
         debug = !debug;
     }
 
+    public boolean debugEnabled() {
+        return debug;
+    }
+
     public void addLight(Light light) {
         lights.add(light);
     }
