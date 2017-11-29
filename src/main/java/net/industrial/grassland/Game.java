@@ -52,7 +52,6 @@ public abstract class Game {
             states = new ArrayList<GameState>();
             initStates();
          
-            for (GameState state : states) state.init(this);
             loop();
         } catch (LWJGLException e) {
             throw new GrasslandException();
@@ -81,6 +80,7 @@ public abstract class Game {
                         transitionCooldown = 1f;
                         changingState = false;
                         currentState = targetState;
+                        currentState.init(this);
                     }
                 } else if (transitionCooldown > 0f) {
                     transitionCooldown -= 0.002f * delta;
@@ -114,7 +114,8 @@ public abstract class Game {
         currentState.updateDefault(this, delta);
     }
 
-    public void enterState(int newState) {
+    public void enterState(int newState) 
+            throws GrasslandException {
         if (currentState != null) {
             changingState = true;
             for (GameState state : states) {
@@ -122,7 +123,10 @@ public abstract class Game {
             }
         } else {
             for (GameState state : states) {
-                if (state.getId() == newState) currentState = state;
+                if (state.getId() == newState) {
+                    currentState = state;
+                    currentState.init(this);
+                }
             }
         }
     }

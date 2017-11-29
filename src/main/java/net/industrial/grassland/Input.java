@@ -5,35 +5,41 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
 public class Input {
+    private int keys, mouseButtons;
+
     private boolean[] currentKeys;
     private boolean[] previousKeys;
+    private boolean[] mouseEvents;
 
     public Input() {
         Keyboard.enableRepeatEvents(true);
-        int keys = Keyboard.getKeyCount();
+        keys = Keyboard.getKeyCount();
         currentKeys = new boolean[keys];
         previousKeys = new boolean[keys];
+     
+        mouseButtons = Mouse.getButtonCount();
+        mouseEvents = new boolean[mouseButtons];
     }
 
     public void update() {
         Keyboard.poll();
-     
-        int keys = Keyboard.getKeyCount();
         currentKeys = new boolean[keys];
         previousKeys = new boolean[keys];
      
         while (Keyboard.next()) {
             if(Keyboard.getEventKeyState()) {
-                for (int i = 0; i < keys; i++){
-                    if (Keyboard.getEventKey() == i)
-                        if (Keyboard.isRepeatEvent()) previousKeys[i] = true;
-                        else currentKeys[i] = true;
-                }
-            } else {
-                for (int i = 0; i < keys; i++){
-                    if (Keyboard.getEventKey() == i) currentKeys[i] = false;
-                }
+                if (Keyboard.isRepeatEvent()) 
+                    previousKeys[Keyboard.getEventKey()] = true;
+                else currentKeys[Keyboard.getEventKey()] = true;
             }
+        }
+      
+        Mouse.poll();
+        mouseEvents = new boolean[mouseButtons];
+     
+        while (Mouse.next()) {
+            if (Mouse.getEventButtonState()) 
+                mouseEvents[Mouse.getEventButton()] = true;
         }
     }
 
@@ -43,6 +49,10 @@ public class Input {
 
     public boolean isKeyDown(int key) {
         return Keyboard.isKeyDown(key);
+    }
+
+    public boolean isMouseButtonPressed(int button) {
+        return mouseEvents[button];
     }
 
     public boolean isMouseButtonDown(int button) {
@@ -63,6 +73,18 @@ public class Input {
 
     public int getMouseDY() {
         return - Mouse.getDY();
+    }
+
+    public int getDWheel() {
+        return Mouse.getDWheel();
+    }
+
+    public void setMouseGrabbed(boolean grabbed) {
+        Mouse.setGrabbed(grabbed);
+    }
+
+    public boolean isMouseGrabbed() {
+        return Mouse.isGrabbed();
     }
 
     public float getMouseGLX() {
