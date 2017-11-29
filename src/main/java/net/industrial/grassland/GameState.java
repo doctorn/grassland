@@ -2,6 +2,7 @@ package net.industrial.grassland;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import net.industrial.grassland.GrasslandException;
 import net.industrial.grassland.audio.Sound;
@@ -14,6 +15,8 @@ import static org.lwjgl.opengl.GL11.*;
 public abstract class GameState {
     private List<Light> lights = new ArrayList<>();
     private List<Camera> cameras = new ArrayList<>();
+    private List<GameObject> objects = new ArrayList<>(),
+            newObjects = new ArrayList<>();
     private Camera active;
 
     private Sound music;
@@ -39,6 +42,7 @@ public abstract class GameState {
             music.setPosition(active.getPosition());
         
         update(game, delta);
+        for (GameObject object : objects) object.update(game, delta);
     }
     
     public abstract void update(Game game, int delta) 
@@ -51,7 +55,15 @@ public abstract class GameState {
             for (Light light : lights) light.renderDebug(game, graphics);
             for (Camera camera : cameras) camera.renderDebug(game, graphics); 
         }
+     
         render(game, graphics);
+        for (GameObject object : objects) object.render(game, graphics);
+        for (GameObject object : newObjects) objects.add(object);
+        newObjects = new ArrayList<GameObject>();
+        Iterator<GameObject> it = objects.iterator(); 
+        while (it.hasNext()) {
+            if (it.next().willDie()) it.remove(); 
+        }
     }
 
     public abstract void render(Game game, Graphics graphics) 
@@ -142,5 +154,14 @@ public abstract class GameState {
 
     public void setMusicVolume(float volume) {
         music.setVolume(volume);
+    }
+
+    public void addObject(GameObject object) {
+        newObjects.add(object);        
+    }
+
+    public List<GameObject> castRay() {
+        //TODO
+        return null;
     }
 }

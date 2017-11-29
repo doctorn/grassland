@@ -10,13 +10,8 @@ public abstract class GameObject {
     private boolean willDie = false;
     private Vector3f position = new Vector3f();
     private float width, height, depth;
-
-    public void update(Game game, int delta) throws GrasslandException {
-        //TODO
-        updateImpl(game, delta);
-    }
     
-    public abstract void updateImpl(Game game, int delta) 
+    public abstract void update(Game game, int delta) 
             throws GrasslandException;
     public abstract void render(Game game, Graphics graphics) 
             throws GrasslandException;
