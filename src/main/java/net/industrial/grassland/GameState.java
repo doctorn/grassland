@@ -7,6 +7,7 @@ import java.util.List;
 import net.industrial.grassland.GrasslandException;
 import net.industrial.grassland.audio.Sound;
 import net.industrial.grassland.graphics.Graphics;
+import net.industrial.grassland.graphics.Ray;
 import net.industrial.grassland.scene.Camera;
 import net.industrial.grassland.scene.Light;
 import org.lwjgl.LWJGLException;

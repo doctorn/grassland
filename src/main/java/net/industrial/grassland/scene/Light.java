@@ -29,13 +29,12 @@ public class Light implements Comparable<Light> {
     }
     
     public Light(GameObject tracked,
-            float r, float g, float b,
-            int lightNumber) {
+            float r, float g, float b) {
         tracking = true;
         this.tracked = tracked;
         
         colour = BufferUtils.createFloatBuffer(4);
-        colour.put(r).put(g).put(g).put(1f);
+        colour.put(r).put(g).put(b).put(1f);
         colour.flip();
         
         setAttenuation(1.0f); 

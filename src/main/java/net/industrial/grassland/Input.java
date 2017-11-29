@@ -1,6 +1,8 @@
 package net.industrial.grassland;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 
 public class Input {
     private boolean[] currentKeys;
@@ -41,5 +43,41 @@ public class Input {
 
     public boolean isKeyDown(int key) {
         return Keyboard.isKeyDown(key);
+    }
+
+    public boolean isMouseButtonDown(int button) {
+        return Mouse.isButtonDown(button);
+    }
+
+    public int getMouseX() {
+        return Mouse.getX();
+    }
+
+    public int getMouseY() {
+        return Display.getHeight() - Mouse.getY() - 1;
+    }
+
+    public int getMouseDX() {
+        return Mouse.getDX();
+    }
+
+    public int getMouseDY() {
+        return - Mouse.getDY();
+    }
+
+    public float getMouseGLX() {
+        return (float) (getMouseX() - Display.getWidth() / 2) / 
+            (Math.min(Display.getWidth(), Display.getHeight()) / 2);
+    }
+
+    public float getMouseGLY() {
+        return (float) (- getMouseY() + Display.getHeight() / 2) / 
+            (Math.min(Display.getWidth(), Display.getHeight()) / 2);
+    }
+
+    public boolean isMouseInArea(int x, int y, int width, int height) {
+        if (getMouseX() < x || getMouseX() > x + width) return false;
+        if (getMouseY() < y || getMouseY() > y + height) return false;
+        return true;
     }
 }

@@ -26,7 +26,7 @@ public abstract class Game {
     private Graphics graphics;
     private int fps = 0, frameCount = 0, cumulativeDelta = 0;
 
-    private Input keyInputs;
+    private Input input;
     
     public Game(String title, int width, int height, boolean fullscreen) {
         this.width = width;
@@ -48,7 +48,7 @@ public abstract class Game {
          
             AudioMaster.init();
             graphics = new Graphics(this);
-            keyInputs = new Input();
+            input = new Input();
             states = new ArrayList<GameState>();
             initStates();
          
@@ -107,7 +107,7 @@ public abstract class Game {
 
     private void update(int delta) 
             throws GrasslandException {
-        keyInputs.update();
+        input.update();
         Camera camera = currentState.getCamera();
         if (camera != null) AudioMaster.setListenerData(camera.getPosition());
         else AudioMaster.setListenerData(new Vector3f());
@@ -132,11 +132,11 @@ public abstract class Game {
     }
 
     public int getWidth() {
-        return width;
+        return Display.getWidth();
     }
    
     public int getHeight() {
-        return height;
+        return Display.getHeight();
     }
 
     public GameState currentState() {
@@ -151,7 +151,7 @@ public abstract class Game {
         return transitionCooldown;
     }
 
-    public Input getKeyInputs() {
-        return keyInputs;
+    public Input getInput() {
+        return input;
     }
 }
