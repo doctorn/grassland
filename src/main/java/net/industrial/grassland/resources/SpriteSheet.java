@@ -17,19 +17,20 @@ public class SpriteSheet {
     private int width, height;
     private int spriteWidth, spriteHeight;
     private boolean hasAlpha = false;
+    private String file;
 
     public SpriteSheet(String file, int spriteWidth, int spriteHeight) 
             throws GrasslandException {
         this.spriteWidth = spriteWidth;
         this.spriteHeight = spriteHeight; 
-        ByteBuffer buffer = null;
-        
+        this.file = file;
+
         try {
             BufferedImage image = ImageIO.read(new File(file));
             
             width = image.getWidth();
             height = image.getHeight();
-            buffer = ByteBuffer.allocateDirect(4 * width * height);
+            ByteBuffer buffer = ByteBuffer.allocateDirect(4 * width * height);
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     Color color = new Color(image.getRGB(i, j), true);
@@ -40,6 +41,7 @@ public class SpriteSheet {
                     buffer.put((i + j * width) * 4 + 3, (byte) color.getAlpha());
                 }
             }
+         
             buffer.flip();
             buffer.limit(buffer.capacity());
             
@@ -88,8 +90,16 @@ public class SpriteSheet {
         return spriteWidth;
     }
 
+    public void setSpriteWidth(int spriteWidth) {
+        this.spriteWidth = spriteWidth;
+    }
+
     public int getSpriteHeight() {
         return spriteHeight;
+    }
+
+    public void setSpriteHeight(int spriteHeight) {
+        this.spriteHeight = spriteHeight;
     }
 
     public int getRows() {
@@ -111,6 +121,10 @@ public class SpriteSheet {
         scaled.width = Math.round(width * sf);
         scaled.height = Math.round(height * sf);
         return scaled;
+    }
+
+    public String getFile() {
+        return file;
     }
 
     public int getID() {

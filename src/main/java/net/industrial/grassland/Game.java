@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Cursor;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -11,6 +13,7 @@ import net.industrial.grassland.GrasslandException;
 import net.industrial.grassland.audio.AudioMaster;
 import net.industrial.grassland.graphics.Graphics;
 import net.industrial.grassland.graphics.Vector3f;
+import net.industrial.grassland.resources.Sprite;
 import net.industrial.grassland.scene.Camera;
 
 public abstract class Game {
@@ -35,7 +38,7 @@ public abstract class Game {
         this.fullscreen = fullscreen;
     }
 
-    public abstract void initStates();
+    public abstract void initStates() throws GrasslandException;
 
     public void init() 
             throws GrasslandException {
@@ -157,5 +160,14 @@ public abstract class Game {
 
     public Input getInput() {
         return input;
+    }
+
+    public void setCursor(Sprite sprite, int x, int y) 
+            throws GrasslandException {
+        try {
+            Mouse.setNativeCursor(sprite.toCursor(x, y));
+        } catch (LWJGLException e) {
+            throw new GrasslandException();
+        }
     }
 }

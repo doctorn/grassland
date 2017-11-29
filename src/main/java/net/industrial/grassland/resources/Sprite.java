@@ -1,5 +1,15 @@
 package net.industrial.grassland.resources;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.IntBuffer;
+import javax.imageio.ImageIO;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Cursor;
+
+import net.industrial.grassland.GrasslandException;
 import net.industrial.grassland.graphics.Vector2f;
 
 public class Sprite {
@@ -7,6 +17,18 @@ public class Sprite {
     private int coordX, coordY;
     private SpriteSheet sheet;
     private boolean hasAlpha;
+    
+    public Sprite(String filename) 
+            throws GrasslandException {
+        sheet = new SpriteSheet(filename, 0, 0); 
+        this.coordX = 0;
+        this.coordY = 0;
+        sheet.setSpriteWidth(sheet.getWidth());
+        sheet.setSpriteHeight(sheet.getHeight());
+        width = sheet.getWidth();
+        height = sheet.getHeight();
+        hasAlpha = sheet.hasAlpha();
+    }
 
     public Sprite(SpriteSheet sheet, int coordX, int coordY) {
         this.coordX = coordX;
@@ -55,11 +77,55 @@ public class Sprite {
         return height;
     }
 
+    public int getCoordX() {
+        return coordX;
+    }
+
+    public int getCoordY() {
+        return coordY;
+    }
+
+    public SpriteSheet getSheet() {
+        return sheet;
+    }
+
     public int getID() {
         return sheet.getID();
     }
 
     public boolean hasAlpha() {
         return hasAlpha;
+    }
+
+    public Cursor toCursor(int hotX, int hotY) 
+            throws GrasslandException {
+        try {
+            hotY = height - hotY - 1;
+            String file = sheet.getFile();
+         
+            BufferedImage image = ImageIO.read(new File(file));
+            IntBuffer buffer = IntBuffer.allocate(width * height);
+            int x = coordX * sheet.getSpriteWidth();
+            int y = coordY * sheet.getSpriteHeight();
+            float scale = (float) width / sheet.getSpriteWidth() * 
+                    (float) sheet.getWidth() / image.getWidth();
+         
+            for (int i = x; i < x + width; i++) {
+                for (int j = y; j < y + height; j++) {
+                    int rgb = image.getRGB((int) Math.floor(i / scale), 
+                            (int) Math.floor(j / scale));
+                    buffer.put(i - x + (y - (j + 1) + height) * width, rgb);
+                }
+            }
+            
+            buffer.flip();
+            buffer.limit(buffer.capacity());
+         
+            return new Cursor(width, height, hotX, hotY, 1, buffer, null);
+        } catch (IOException e) {
+            throw new GrasslandException();
+        } catch (LWJGLException e) {
+            throw new GrasslandException();
+        }
     }
 }
