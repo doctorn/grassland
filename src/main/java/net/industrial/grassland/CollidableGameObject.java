@@ -38,13 +38,19 @@ public abstract class CollidableGameObject extends GameObject {
         return getPosition().z + getDepth() / 2;
     }
 
-    public boolean rayIntersection(Ray r) {
-        float s = (this.getPosition().dot(r.getDirection()) - r.getOrigin().dot(r.getDirection())) /
-                r.getDirection().dot(r.getDirection());
-        Vector3f closestVector = r.getOrigin().sub(this.getPosition()).add(r.getDirection().scale(s));
+    public boolean boundsVector(Vector3f v) {
+        return (Math.abs(v.x) <= getWidth() / 2f &&
+                Math.abs(v.y) <= getHeight() / 2f &&
+                Math.abs(v.z) <= getDepth() / 2f);
+    }
 
-        return (Math.abs(closestVector.x) <= getWidth() / 2f &&
-                Math.abs(closestVector.y) <= getHeight() / 2f &&
-                Math.abs(closestVector.z) <= getDepth() / 2f);
+    public Vector3f closestApproach(Ray r) {
+        float s = (this.getPosition().dot(r.getDirection()) - 
+                r.getOrigin().dot(r.getDirection())) /
+                r.getDirection().dot(r.getDirection());
+        Vector3f closestVector = r.getOrigin().sub(this.getPosition())
+            .add(r.getDirection().scale(s));
+     
+        return closestVector;
     }
 }

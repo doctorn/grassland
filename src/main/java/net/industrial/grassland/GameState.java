@@ -42,7 +42,15 @@ public abstract class GameState {
             music.setPosition(active.getPosition());
         
         update(game, delta);
-        for (GameObject object : objects) object.update(game, delta);
+        
+        Iterator<GameObject> it = objects.iterator(); 
+        while (it.hasNext()) {
+            GameObject object = it.next(); 
+            object.update(game, delta);
+            if (object.willDie()) it.remove(); 
+        }
+        for (GameObject object : newObjects) objects.add(object);
+        newObjects = new ArrayList<GameObject>();
     }
     
     public abstract void update(Game game, int delta) 
@@ -59,12 +67,6 @@ public abstract class GameState {
      
         render(game, graphics);
         for (GameObject object : objects) object.render(game, graphics);
-        for (GameObject object : newObjects) objects.add(object);
-        newObjects = new ArrayList<GameObject>();
-        Iterator<GameObject> it = objects.iterator(); 
-        while (it.hasNext()) {
-            if (it.next().willDie()) it.remove(); 
-        }
     }
 
     public abstract void render(Game game, Graphics graphics) 
@@ -157,8 +159,7 @@ public abstract class GameState {
         newObjects.add(object);        
     }
 
-    public List<GameObject> castRay() {
-        //TODO
-        return null;
+    public List<GameObject> castRay(Ray r) {
+        return null;  
     }
 }
