@@ -43,6 +43,18 @@ public abstract class GameObject {
     public float getZ() {
         return position.z;
     }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public float getDepth() {
+        return depth;
+    }
     
     public Vector3f getPosition() {
         return new Vector3f(position);
