@@ -91,12 +91,17 @@ public abstract class Game {
                         transitionCooldown = 0f;
                 }
              
+                graphics.clear();
                 int remainder = delta % 10;
                 int step = delta / 10;
-                for (int i = 0; i < step; i++) update(10); 
-                if (remainder != 0) update(remainder); 
-              
-                graphics.clear();
+                for (int i = 0; i < step; i++) {
+                    graphics.initMatrices(); 
+                    update(10);
+                } 
+                if (remainder != 0) {
+                    graphics.initMatrices();
+                    update(remainder);
+                } 
                 currentState.renderDefault(this, graphics);
                 graphics.render();
                 Display.update();

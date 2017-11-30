@@ -44,6 +44,17 @@ public class Graphics {
         glClearColor(r, g, b, 1f);    
     }
 
+    public void drawLine(Vector3f start, Vector3f end) {
+        float length = end.sub(start).length();
+        float width = 0.0001f;
+        Vector3f axis = start.sub(end).normalise();
+        float z = - axis.dot(new Vector3f(1f, 1f, 0f)) / axis.z;
+        Vector3f normal = (new Vector3f(1f, 1f, z)); 
+        Vector3f position = start.add(end.sub(start).scale(0.5f));
+        quads.add(new Quad(position, normal, axis, length, width, true,
+                null, null, null, game.currentState().getCamera()));
+    }
+
     public void drawCuboid(Vector3f position, 
             float dX, float dY, float dZ) {
         quads.add(new Quad(
@@ -118,14 +129,14 @@ public class Graphics {
                     x + i * font.getCharacterWidth(), y);
     }
 
-    public void render() {
+    public void initMatrices() {
         glEnable(GL_DEPTH_TEST);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         glColor4f(1f, 1f, 1f, 1f); 
         float aspect = ((float) game.getWidth()) / ((float) game.getHeight());
         if (game.currentState().perspectiveEnabled()) {
-            gluPerspective(45.0f, aspect, 0.1f, 100.0f);
+            gluPerspective(45f, aspect, 0.1f, 100.0f);
             glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         } else glOrtho(- aspect / 2f, aspect / 2f, -0.5f, 0.5f, -100f, 100f);
         
@@ -133,7 +144,10 @@ public class Graphics {
         glLoadIdentity();
         if (game.currentState().getCamera() != null)
             game.currentState().getCamera().look();
-        
+    }
+
+    public void render() {
+        initMatrices(); 
         for (int i = 0; i < 8 && i < game.currentState().getLights().size(); i++)
             game.currentState().getLights().get(i).render(LIGHTS[i]); 
      

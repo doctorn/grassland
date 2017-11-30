@@ -1,8 +1,15 @@
 package net.industrial.grassland;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import net.industrial.grassland.graphics.Vector3f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 public class Input {
     private int keys, mouseButtons;
@@ -89,17 +96,48 @@ public class Input {
 
     public float getMouseGLX() {
         return (float) (getMouseX() - Display.getWidth() / 2) / 
-            (Math.min(Display.getWidth(), Display.getHeight()) / 2);
+            (Math.min(Display.getWidth(), Display.getHeight()));
     }
 
     public float getMouseGLY() {
         return (float) (- getMouseY() + Display.getHeight() / 2) / 
-            (Math.min(Display.getWidth(), Display.getHeight()) / 2);
+            (Math.min(Display.getWidth(), Display.getHeight()));
+    }
+
+    public float getMaxGLX() {
+        return (float) Display.getWidth() / 
+            (2 * Math.min(Display.getWidth(), Display.getHeight()));
+    }
+
+    public float getMaxGLY() {
+        return (float) Display.getHeight() / 
+            (2 * Math.min(Display.getWidth(), Display.getHeight()));
     }
 
     public boolean isMouseInArea(int x, int y, int width, int height) {
         if (getMouseX() < x || getMouseX() > x + width) return false;
         if (getMouseY() < y || getMouseY() > y + height) return false;
         return true;
+    }
+
+    public Vector3f getWorldSpaceMouse() {
+        Vector3f window = new Vector3f(Mouse.getX(), Mouse.getY(), 0.1f);
+        
+        FloatBuffer position = BufferUtils.createFloatBuffer(4);
+        FloatBuffer model = BufferUtils.createFloatBuffer(16);
+        FloatBuffer projection = BufferUtils.createFloatBuffer(16);
+        IntBuffer viewport = BufferUtils.createIntBuffer(16);
+     
+        glGetFloat(GL_MODELVIEW_MATRIX, model);
+        glGetFloat(GL_PROJECTION_MATRIX, projection);
+        glGetInteger(GL_VIEWPORT, viewport);
+        gluUnProject(window.x, window.y, window.z, 
+                model, projection, viewport, position);
+        position.rewind();
+        float x = position.get();
+        float y = position.get();
+        float z = position.get();
+      
+        return new Vector3f(x, y, z);
     }
 }

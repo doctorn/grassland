@@ -11,10 +11,11 @@ public abstract class Camera {
      
     public void look() {
         Vector3f l = lookVector();
-        Vector3f u = flatLookVector().cross(flatAxisVector());
+        Vector3f u = lookVector().cross(axisVector());
         Vector3f shake = u.scale(2f * (float) Math.random() - 1f)
-            .add(flatAxisVector().scale(2f * (float) Math.random() - 1f));
+            .add(axisVector().scale(2f * (float) Math.random() - 1f));
         shake = shake.scale(0.05f);
+
         gluLookAt(position.x + level * shake.x, position.y + level * shake.y, position.z + level * shake.z,
             position.x - l.x + level * shake.x, 
             position.y - l.y + level * shake.y, 
