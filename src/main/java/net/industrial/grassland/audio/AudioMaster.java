@@ -13,7 +13,6 @@ import static org.lwjgl.openal.AL.*;
 import static org.lwjgl.openal.AL10.*;
 
 public class AudioMaster {
-
     private static List<Integer> buffers = new ArrayList<Integer>();
 
     public static void init() 
