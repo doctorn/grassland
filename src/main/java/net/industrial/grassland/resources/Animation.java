@@ -27,21 +27,35 @@ public class Animation {
     public void start() {
         x = startX;
         y = startY;
-        currentTime = 0; 
+        currentTime = 0;
+        currentFrame = 0;
+        stopping = false;
         playing = true;
     }
-
-    public void stop() {
-        currentTime = 0;
-        playing = false;
+    
+    public void setCurrentFrame(int frame) {
+        currentFrame = frame;
     }
-   
+
+    public int getCurrentFrame() {
+        return currentFrame;
+    }
+
+    public boolean isPlaying() {
+        return playing;
+    }
+
     public void pause() {
         playing = false;
     }
 
     public void unpause() {
         playing = true;
+    }
+
+    public void stop() {
+        playing = false;
+        stopping = false;
     }
 
     public void stopAt(int frameNumber) {

@@ -18,8 +18,7 @@ import static org.lwjgl.opengl.GL11.*;
 public abstract class GameState {
     private List<Light> lights = new ArrayList<>();
     private List<Camera> cameras = new ArrayList<>();
-    private List<GameObject> objects = new ArrayList<>(),
-            newObjects = new ArrayList<>();
+    private List<GameObject> objects = new ArrayList<>();
     private Camera active;
 
     private Sound music;
@@ -27,6 +26,7 @@ public abstract class GameState {
     private boolean debug = false;
     private boolean lighting = false, perspective = true;
     private float renderDistance = 100f;
+    private boolean init = false;
 
     public GameState() {
         setLighting(false);
@@ -43,17 +43,18 @@ public abstract class GameState {
      
         if (music != null && active!= null)
             music.setPosition(active.getPosition());
+      
+        int count = objects.size();
+        for (int i = 0; i < count; i++) {
+            objects.get(i).update(game, delta); 
+        }
+     
+        Iterator<GameObject> it = objects.iterator();
+        while (it.hasNext()) {
+            if (it.next().willDie()) it.remove();
+        }
         
         update(game, delta);
-        
-        Iterator<GameObject> it = objects.iterator(); 
-        while (it.hasNext()) {
-            GameObject object = it.next(); 
-            object.update(game, delta);
-            if (object.willDie()) it.remove(); 
-        }
-        for (GameObject object : newObjects) objects.add(object);
-        newObjects = new ArrayList<GameObject>();
     }
     
     public abstract void update(Game game, int delta) 
@@ -163,7 +164,7 @@ public abstract class GameState {
     }
 
     public void addObject(GameObject object) {
-        newObjects.add(object);        
+        objects.add(object);
     }
 
     public Ray getMouseRay(Vector3f worldSpaceMouse) {

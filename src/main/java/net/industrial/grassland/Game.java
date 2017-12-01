@@ -94,14 +94,8 @@ public abstract class Game {
                 graphics.clear();
                 int remainder = delta % 10;
                 int step = delta / 10;
-                for (int i = 0; i < step; i++) {
-                    graphics.initMatrices(); 
-                    update(10);
-                } 
-                if (remainder != 0) {
-                    graphics.initMatrices();
-                    update(remainder);
-                } 
+                for (int i = 0; i < step; i++) update(10);
+                if (remainder != 0) update(remainder);
                 currentState.renderDefault(this, graphics);
                 graphics.render();
                 Display.update();
@@ -115,6 +109,7 @@ public abstract class Game {
 
     private void update(int delta) 
             throws GrasslandException {
+        graphics.initMatrices();
         input.update();
         Camera camera = currentState.getCamera();
         if (camera != null) AudioMaster.setListenerData(camera.getPosition());
