@@ -53,6 +53,14 @@ public class Animation {
         this.looping = looping;
     }
 
+    public boolean isStopping() {
+        return stopping;
+    }
+
+    public boolean isStopped() {
+        return playing;
+    }
+
     public void update(int delta) {
         if (playing) {
             currentTime += delta;
