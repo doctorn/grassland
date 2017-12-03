@@ -17,7 +17,7 @@ public class Quad implements Comparable<Quad> {
     public Quad(Vector3f position, Vector3f normal, Vector3f lAxis, 
             float l, float w, boolean wireframe, 
             Sprite sprite, Vector2f tStart, Vector2f tSize,
-            Camera camera) {
+            Camera camera, boolean perspective) {
         this.wireframe = wireframe;
      
         if (sprite != null) {
@@ -53,8 +53,11 @@ public class Quad implements Comparable<Quad> {
         if (camera != null) {
             distance = Float.NEGATIVE_INFINITY;
             for (int i = 0; i < 4; i++) {
-                Vector3f d = vertices[i].sub(camera.getPosition());
-                float potential = d.length();
+                Vector3f d;
+                d = vertices[i].sub(camera.getPosition());
+                float potential;
+                if (perspective) potential = d.length();
+                else potential = - d.dot(camera.lookVector());
                 if (potential > distance) distance = potential;
             }
         } else distance = 0;

@@ -52,7 +52,8 @@ public class Graphics {
         Vector3f normal = (new Vector3f(1f, 1f, z)); 
         Vector3f position = start.add(end.sub(start).scale(0.5f));
         quads.add(new Quad(position, normal, axis, length, width, true,
-                null, null, null, game.currentState().getCamera()));
+                null, null, null, game.currentState().getCamera(),
+                game.currentState().perspectiveEnabled()));
     }
 
     public void drawCuboid(Vector3f position, 
@@ -60,19 +61,23 @@ public class Graphics {
         quads.add(new Quad(
                 new Vector3f(position.x + dX / 2, position.y, position.z),
                 new Vector3f(1f, 0, 0), new Vector3f(0, 1f, 0), 
-                dY, dZ, true, null, null, null, game.currentState().getCamera()));
+                dY, dZ, true, null, null, null, game.currentState().getCamera(),
+                game.currentState().perspectiveEnabled()));
         quads.add(new Quad(
                 new Vector3f(position.x - dX / 2, position.y, position.z),
                 new Vector3f(1f, 0, 0), new Vector3f(0, 1f, 0), 
-                dY, dZ, true, null, null, null, game.currentState().getCamera()));
+                dY, dZ, true, null, null, null, game.currentState().getCamera(),
+                game.currentState().perspectiveEnabled()));
         quads.add(new Quad(
                 new Vector3f(position.x, position.y, position.z - dZ / 2),
                 new Vector3f(0, 0, 1f), new Vector3f(1f, 0, 0), 
-                dX, dY, true, null, null, null, game.currentState().getCamera()));
+                dX, dY, true, null, null, null, game.currentState().getCamera(),
+                game.currentState().perspectiveEnabled()));
         quads.add(new Quad(
                 new Vector3f(position.x, position.y, position.z + dZ / 2),
                 new Vector3f(0, 0, 1f), new Vector3f(1f, 0, 0), 
-                dX, dY, true, null, null, null, game.currentState().getCamera()));
+                dX, dY, true, null, null, null, game.currentState().getCamera(),
+                game.currentState().perspectiveEnabled()));
     }
    
     public void fillCuboid(Vector3f p, Vector3f n, Vector3f a,
@@ -106,10 +111,12 @@ public class Graphics {
             float l, float w, Sprite sprite) {
         if (!sprite.hasAlpha()) quads.add(new Quad(p, n, a, l, w, false, 
                 sprite, sprite.getStartVector(), sprite.getSizeVector(),
-                game.currentState().getCamera()));
+                game.currentState().getCamera(),
+                game.currentState().perspectiveEnabled()));
         else alphaQuads.add(new Quad(p, n, a, l, w, false, 
                 sprite, sprite.getStartVector(), sprite.getSizeVector(),
-                game.currentState().getCamera()));
+                game.currentState().getCamera(),
+                game.currentState().perspectiveEnabled()));
     } 
  
     public void drawImage(Sprite sprite, int x, int y) {
@@ -120,7 +127,8 @@ public class Graphics {
                 new Vector3f(1f, 0, 0),
                 sprite.getWidth(), sprite.getHeight(), false,
                 sprite, sprite.getStartVector(), sprite.getSizeVector(),
-                game.currentState().getCamera()));
+                game.currentState().getCamera(),
+                game.currentState().perspectiveEnabled()));
     }
 
     public void drawString(Font font, String text, int x, int y) {
